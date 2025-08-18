@@ -4,14 +4,20 @@ package api
 
 import (
 	"net/http"
+	"net/url"
 
+	"github.com/go-faster/errors"
+
+	"github.com/ogen-go/ogen/conv"
 	"github.com/ogen-go/ogen/middleware"
 	"github.com/ogen-go/ogen/ogenerrors"
+	"github.com/ogen-go/ogen/uri"
+	"github.com/ogen-go/ogen/validate"
 )
 
 // GetTrainInfoParams is parameters of getTrainInfo operation.
 type GetTrainInfoParams struct {
-	// 列車情報.
+	// 列車番号.
 	TrainNumber string
 }
 
@@ -26,10 +32,44 @@ func unpackGetTrainInfoParams(packed middleware.Parameters) (params GetTrainInfo
 	return params
 }
 
-func decodeGetTrainInfoParams(args [0]string, argsEscaped bool, r *http.Request) (params GetTrainInfoParams, _ error) {
+func decodeGetTrainInfoParams(args [1]string, argsEscaped bool, r *http.Request) (params GetTrainInfoParams, _ error) {
 	// Decode path: trainNumber.
 	if err := func() error {
-		// Not used.
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "trainNumber",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.TrainNumber = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{

@@ -5,7 +5,7 @@ info:
 
 
 paths:
-  /train:
+  /train/{trainNumber}:
     get:
       operationId: getTrainInfo
       summary: 列車情報の取得
@@ -15,7 +15,7 @@ paths:
           schema:
             type: string
           required: true
-          description: 列車情報
+          description: 列車番号
       responses:
         "200":
           description: 列車情報の取得に成功
@@ -32,7 +32,7 @@ components:
         trainNumber:
           type: string
           description: 列車番号
-        timeTbale:
+        timeTable:
           type: object
           description: 時刻表
           additionalProperties:

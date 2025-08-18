@@ -40,6 +40,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
+	args := [1]string{}
 
 	// Static code generated router with unwrapped path search.
 	switch {
@@ -48,19 +49,30 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/train"
+		case '/': // Prefix: "/train/"
 
-			if l := len("/train"); len(elem) >= l && elem[0:l] == "/train" {
+			if l := len("/train/"); len(elem) >= l && elem[0:l] == "/train/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
+			// Param: "trainNumber"
+			// Leaf parameter, slashes are prohibited
+			idx := strings.IndexByte(elem, '/')
+			if idx >= 0 {
+				break
+			}
+			args[0] = elem
+			elem = ""
+
 			if len(elem) == 0 {
 				// Leaf node.
 				switch r.Method {
 				case "GET":
-					s.handleGetTrainInfoRequest([0]string{}, elemIsEscaped, w, r)
+					s.handleGetTrainInfoRequest([1]string{
+						args[0],
+					}, elemIsEscaped, w, r)
 				default:
 					s.notAllowed(w, r, "GET")
 				}
@@ -80,7 +92,7 @@ type Route struct {
 	operationID string
 	pathPattern string
 	count       int
-	args        [0]string
+	args        [1]string
 }
 
 // Name returns ogen operation name.
@@ -148,13 +160,22 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/train"
+		case '/': // Prefix: "/train/"
 
-			if l := len("/train"); len(elem) >= l && elem[0:l] == "/train" {
+			if l := len("/train/"); len(elem) >= l && elem[0:l] == "/train/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
+
+			// Param: "trainNumber"
+			// Leaf parameter, slashes are prohibited
+			idx := strings.IndexByte(elem, '/')
+			if idx >= 0 {
+				break
+			}
+			args[0] = elem
+			elem = ""
 
 			if len(elem) == 0 {
 				// Leaf node.
@@ -163,9 +184,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					r.name = GetTrainInfoOperation
 					r.summary = "列車情報の取得"
 					r.operationID = "getTrainInfo"
-					r.pathPattern = "/train"
+					r.pathPattern = "/train/{trainNumber}"
 					r.args = args
-					r.count = 0
+					r.count = 1
 					return r, true
 				default:
 					return

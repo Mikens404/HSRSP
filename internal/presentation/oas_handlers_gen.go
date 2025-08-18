@@ -34,14 +34,14 @@ func (c *codeRecorder) WriteHeader(status int) {
 //
 // 列車情報の取得.
 //
-// GET /train
-func (s *Server) handleGetTrainInfoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// GET /train/{trainNumber}
+func (s *Server) handleGetTrainInfoRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getTrainInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/train"),
+		semconv.HTTPRouteKey.String("/train/{trainNumber}"),
 	}
 
 	// Start a span for this request.

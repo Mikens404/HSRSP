@@ -17,7 +17,7 @@ var _ Handler = UnimplementedHandler{}
 //
 // 列車情報の取得.
 //
-// GET /train
+// GET /train/{trainNumber}
 func (UnimplementedHandler) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (r *TrainInfo, _ error) {
 	return r, ht.ErrNotImplemented
 }

@@ -98,38 +98,38 @@ func (o OptString) Or(d string) string {
 	return d
 }
 
-// NewOptTrainInfoTimeTbale returns new OptTrainInfoTimeTbale with value set to v.
-func NewOptTrainInfoTimeTbale(v TrainInfoTimeTbale) OptTrainInfoTimeTbale {
-	return OptTrainInfoTimeTbale{
+// NewOptTrainInfoTimeTable returns new OptTrainInfoTimeTable with value set to v.
+func NewOptTrainInfoTimeTable(v TrainInfoTimeTable) OptTrainInfoTimeTable {
+	return OptTrainInfoTimeTable{
 		Value: v,
 		Set:   true,
 	}
 }
 
-// OptTrainInfoTimeTbale is optional TrainInfoTimeTbale.
-type OptTrainInfoTimeTbale struct {
-	Value TrainInfoTimeTbale
+// OptTrainInfoTimeTable is optional TrainInfoTimeTable.
+type OptTrainInfoTimeTable struct {
+	Value TrainInfoTimeTable
 	Set   bool
 }
 
-// IsSet returns true if OptTrainInfoTimeTbale was set.
-func (o OptTrainInfoTimeTbale) IsSet() bool { return o.Set }
+// IsSet returns true if OptTrainInfoTimeTable was set.
+func (o OptTrainInfoTimeTable) IsSet() bool { return o.Set }
 
 // Reset unsets value.
-func (o *OptTrainInfoTimeTbale) Reset() {
-	var v TrainInfoTimeTbale
+func (o *OptTrainInfoTimeTable) Reset() {
+	var v TrainInfoTimeTable
 	o.Value = v
 	o.Set = false
 }
 
 // SetTo sets value to v.
-func (o *OptTrainInfoTimeTbale) SetTo(v TrainInfoTimeTbale) {
+func (o *OptTrainInfoTimeTable) SetTo(v TrainInfoTimeTable) {
 	o.Set = true
 	o.Value = v
 }
 
 // Get returns value and boolean that denotes whether value was set.
-func (o OptTrainInfoTimeTbale) Get() (v TrainInfoTimeTbale, ok bool) {
+func (o OptTrainInfoTimeTable) Get() (v TrainInfoTimeTable, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -137,7 +137,7 @@ func (o OptTrainInfoTimeTbale) Get() (v TrainInfoTimeTbale, ok bool) {
 }
 
 // Or returns value if set, or given parameter if does not.
-func (o OptTrainInfoTimeTbale) Or(d TrainInfoTimeTbale) TrainInfoTimeTbale {
+func (o OptTrainInfoTimeTable) Or(d TrainInfoTimeTable) TrainInfoTimeTable {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -149,7 +149,7 @@ type TrainInfo struct {
 	// 列車番号.
 	TrainNumber OptString `json:"trainNumber"`
 	// 時刻表.
-	TimeTbale OptTrainInfoTimeTbale `json:"timeTbale"`
+	TimeTable OptTrainInfoTimeTable `json:"timeTable"`
 }
 
 // GetTrainNumber returns the value of TrainNumber.
@@ -157,9 +157,9 @@ func (s *TrainInfo) GetTrainNumber() OptString {
 	return s.TrainNumber
 }
 
-// GetTimeTbale returns the value of TimeTbale.
-func (s *TrainInfo) GetTimeTbale() OptTrainInfoTimeTbale {
-	return s.TimeTbale
+// GetTimeTable returns the value of TimeTable.
+func (s *TrainInfo) GetTimeTable() OptTrainInfoTimeTable {
+	return s.TimeTable
 }
 
 // SetTrainNumber sets the value of TrainNumber.
@@ -167,44 +167,44 @@ func (s *TrainInfo) SetTrainNumber(val OptString) {
 	s.TrainNumber = val
 }
 
-// SetTimeTbale sets the value of TimeTbale.
-func (s *TrainInfo) SetTimeTbale(val OptTrainInfoTimeTbale) {
-	s.TimeTbale = val
+// SetTimeTable sets the value of TimeTable.
+func (s *TrainInfo) SetTimeTable(val OptTrainInfoTimeTable) {
+	s.TimeTable = val
 }
 
 // 時刻表.
-type TrainInfoTimeTbale map[string]TrainInfoTimeTbaleItem
+type TrainInfoTimeTable map[string]TrainInfoTimeTableItem
 
-func (s *TrainInfoTimeTbale) init() TrainInfoTimeTbale {
+func (s *TrainInfoTimeTable) init() TrainInfoTimeTable {
 	m := *s
 	if m == nil {
-		m = map[string]TrainInfoTimeTbaleItem{}
+		m = map[string]TrainInfoTimeTableItem{}
 		*s = m
 	}
 	return m
 }
 
-type TrainInfoTimeTbaleItem struct {
+type TrainInfoTimeTableItem struct {
 	Code OptString   `json:"code"`
 	Text OptDateTime `json:"text"`
 }
 
 // GetCode returns the value of Code.
-func (s *TrainInfoTimeTbaleItem) GetCode() OptString {
+func (s *TrainInfoTimeTableItem) GetCode() OptString {
 	return s.Code
 }
 
 // GetText returns the value of Text.
-func (s *TrainInfoTimeTbaleItem) GetText() OptDateTime {
+func (s *TrainInfoTimeTableItem) GetText() OptDateTime {
 	return s.Text
 }
 
 // SetCode sets the value of Code.
-func (s *TrainInfoTimeTbaleItem) SetCode(val OptString) {
+func (s *TrainInfoTimeTableItem) SetCode(val OptString) {
 	s.Code = val
 }
 
 // SetText sets the value of Text.
-func (s *TrainInfoTimeTbaleItem) SetText(val OptDateTime) {
+func (s *TrainInfoTimeTableItem) SetText(val OptDateTime) {
 	s.Text = val
 }

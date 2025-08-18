@@ -15,6 +15,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 	"go.opentelemetry.io/otel/trace"
 
+	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
@@ -31,7 +32,7 @@ type Invoker interface {
 	//
 	// 列車情報の取得.
 	//
-	// GET /train
+	// GET /train/{trainNumber}
 	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
 }
 
@@ -82,7 +83,7 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 //
 // 列車情報の取得.
 //
-// GET /train
+// GET /train/{trainNumber}
 func (c *Client) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error) {
 	res, err := c.sendGetTrainInfo(ctx, params)
 	return res, err
@@ -92,7 +93,7 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getTrainInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/train"),
+		semconv.HTTPRouteKey.String("/train/{trainNumber}"),
 	}
 
 	// Run stopwatch.
@@ -124,8 +125,26 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/train"
+	var pathParts [2]string
+	pathParts[0] = "/train/"
+	{
+		// Encode "trainNumber" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "trainNumber",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.TrainNumber))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"

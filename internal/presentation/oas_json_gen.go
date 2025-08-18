@@ -81,21 +81,21 @@ func (s *OptString) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes TrainInfoTimeTbale as json.
-func (o OptTrainInfoTimeTbale) Encode(e *jx.Encoder) {
+// Encode encodes TrainInfoTimeTable as json.
+func (o OptTrainInfoTimeTable) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	o.Value.Encode(e)
 }
 
-// Decode decodes TrainInfoTimeTbale from json.
-func (o *OptTrainInfoTimeTbale) Decode(d *jx.Decoder) error {
+// Decode decodes TrainInfoTimeTable from json.
+func (o *OptTrainInfoTimeTable) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptTrainInfoTimeTbale to nil")
+		return errors.New("invalid: unable to decode OptTrainInfoTimeTable to nil")
 	}
 	o.Set = true
-	o.Value = make(TrainInfoTimeTbale)
+	o.Value = make(TrainInfoTimeTable)
 	if err := o.Value.Decode(d); err != nil {
 		return err
 	}
@@ -103,14 +103,14 @@ func (o *OptTrainInfoTimeTbale) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptTrainInfoTimeTbale) MarshalJSON() ([]byte, error) {
+func (s OptTrainInfoTimeTable) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptTrainInfoTimeTbale) UnmarshalJSON(data []byte) error {
+func (s *OptTrainInfoTimeTable) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -131,16 +131,16 @@ func (s *TrainInfo) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.TimeTbale.Set {
-			e.FieldStart("timeTbale")
-			s.TimeTbale.Encode(e)
+		if s.TimeTable.Set {
+			e.FieldStart("timeTable")
+			s.TimeTable.Encode(e)
 		}
 	}
 }
 
 var jsonFieldsNameOfTrainInfo = [2]string{
 	0: "trainNumber",
-	1: "timeTbale",
+	1: "timeTable",
 }
 
 // Decode decodes TrainInfo from json.
@@ -161,15 +161,15 @@ func (s *TrainInfo) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"trainNumber\"")
 			}
-		case "timeTbale":
+		case "timeTable":
 			if err := func() error {
-				s.TimeTbale.Reset()
-				if err := s.TimeTbale.Decode(d); err != nil {
+				s.TimeTable.Reset()
+				if err := s.TimeTable.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"timeTbale\"")
+				return errors.Wrap(err, "decode field \"timeTable\"")
 			}
 		default:
 			return d.Skip()
@@ -196,14 +196,14 @@ func (s *TrainInfo) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s TrainInfoTimeTbale) Encode(e *jx.Encoder) {
+func (s TrainInfoTimeTable) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields implements json.Marshaler.
-func (s TrainInfoTimeTbale) encodeFields(e *jx.Encoder) {
+func (s TrainInfoTimeTable) encodeFields(e *jx.Encoder) {
 	for k, elem := range s {
 		e.FieldStart(k)
 
@@ -211,14 +211,14 @@ func (s TrainInfoTimeTbale) encodeFields(e *jx.Encoder) {
 	}
 }
 
-// Decode decodes TrainInfoTimeTbale from json.
-func (s *TrainInfoTimeTbale) Decode(d *jx.Decoder) error {
+// Decode decodes TrainInfoTimeTable from json.
+func (s *TrainInfoTimeTable) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode TrainInfoTimeTbale to nil")
+		return errors.New("invalid: unable to decode TrainInfoTimeTable to nil")
 	}
 	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem TrainInfoTimeTbaleItem
+		var elem TrainInfoTimeTableItem
 		if err := func() error {
 			if err := elem.Decode(d); err != nil {
 				return err
@@ -230,34 +230,34 @@ func (s *TrainInfoTimeTbale) Decode(d *jx.Decoder) error {
 		m[string(k)] = elem
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode TrainInfoTimeTbale")
+		return errors.Wrap(err, "decode TrainInfoTimeTable")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s TrainInfoTimeTbale) MarshalJSON() ([]byte, error) {
+func (s TrainInfoTimeTable) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *TrainInfoTimeTbale) UnmarshalJSON(data []byte) error {
+func (s *TrainInfoTimeTable) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *TrainInfoTimeTbaleItem) Encode(e *jx.Encoder) {
+func (s *TrainInfoTimeTableItem) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *TrainInfoTimeTbaleItem) encodeFields(e *jx.Encoder) {
+func (s *TrainInfoTimeTableItem) encodeFields(e *jx.Encoder) {
 	{
 		if s.Code.Set {
 			e.FieldStart("code")
@@ -272,15 +272,15 @@ func (s *TrainInfoTimeTbaleItem) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfTrainInfoTimeTbaleItem = [2]string{
+var jsonFieldsNameOfTrainInfoTimeTableItem = [2]string{
 	0: "code",
 	1: "text",
 }
 
-// Decode decodes TrainInfoTimeTbaleItem from json.
-func (s *TrainInfoTimeTbaleItem) Decode(d *jx.Decoder) error {
+// Decode decodes TrainInfoTimeTableItem from json.
+func (s *TrainInfoTimeTableItem) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode TrainInfoTimeTbaleItem to nil")
+		return errors.New("invalid: unable to decode TrainInfoTimeTableItem to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -310,21 +310,21 @@ func (s *TrainInfoTimeTbaleItem) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode TrainInfoTimeTbaleItem")
+		return errors.Wrap(err, "decode TrainInfoTimeTableItem")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *TrainInfoTimeTbaleItem) MarshalJSON() ([]byte, error) {
+func (s *TrainInfoTimeTableItem) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *TrainInfoTimeTbaleItem) UnmarshalJSON(data []byte) error {
+func (s *TrainInfoTimeTableItem) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
