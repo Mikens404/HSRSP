@@ -16,5 +16,5 @@ type Reservation struct {
 	amount                int
 	reservationPeople     int
 	reservationStatus     CustomerReservationStatus
-	CustomeInfo           string
+    customerInfo          string
 }
