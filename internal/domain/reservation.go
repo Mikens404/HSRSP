@@ -11,10 +11,10 @@ const (
 
 type Reservation struct {
 	reservationNumber     int
-    reservationTrainNumber int
-	reservationSeat       []TrainReservationStatus
+	reservationTrinNumber int
+	reservationSeat       []SeatReservationStatus
 	amount                int
 	reservationPeople     int
 	reservationStatus     CustomerReservationStatus
-    customerInfo          string
+	customerInfo          string
 }
