@@ -23,9 +23,9 @@ type SeatReservationStatus struct {
 	reservations map[string]bool // [席番]
 }
 
-type TimeTable []StationStopList
+type TimeTable []StopStationList
 
-type StationStopList struct {
+type StopStationList struct {
 	StationName   string
 	ArrivalTime   time.Time
 	DepartureTime time.Time
