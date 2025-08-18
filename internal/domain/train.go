@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type TrainType int
 
 const (
@@ -25,6 +27,6 @@ type TimeTable []StationStopList
 
 type StationStopList struct {
 	StationName   string
-	ArrivalTime   int // ex.1000 {秒単位で管理しない(したくない)ので}
-	DepartureTime int
+	ArrivalTime   time.Time
+	DepartureTime time.Time
 }
