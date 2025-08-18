@@ -1,2 +1,2 @@
-# SRS
+# Seat Reservation System
 自らのシステム開発学習のための席予約システム
