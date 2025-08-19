@@ -13,7 +13,7 @@ paths:
         - in: path
           name: trainNumber
           schema:
-            type: string
+            type: integer
           required: true
           description: 列車番号
       responses:
@@ -23,6 +23,37 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/trainInfo"
+  /reservation:
+    post:
+      operationId: postReservation
+      summary: 予約情報の作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservationTrainNumber:
+                  type: integer
+                  description: 予約列車番号
+                reservationSeat:
+                  type: string
+                  description: 予約席
+                reservationPeople:
+                  type: integer
+                  description: 予約人数
+                customerInfo:
+                  type: string
+                  description: 顧客情報
+              required:
+                - reservationTrainNumber
+                - reservationSeat
+                - reservationPeople
+                - customerInfo
+        required: true
+      responses:
+        "200":
+          description: 予約情報の作成に成功
 
 components:
   schemas:
@@ -43,3 +74,28 @@ components:
               text:
                 type: string
                 format: date-time
+    reservationInfo:
+      type: object
+      properties:
+        reservationNumber:
+          type: integer
+          description: 予約番号
+        reservationTrainNumber:
+          type: integer
+          description: 予約列車番号
+        reservationSeatInfo:
+          type: string
+          description: 予約席
+        amount:
+          type: integer
+          description: 料金
+        reservationPeople:
+          type: integer
+          description: 予約人数
+        reservationStatus:
+          type: string
+          description: 予約状況(予約済,仮予約,キャンセル)
+        customerInfo:
+          type: string
+          description: 顧客情報
+        

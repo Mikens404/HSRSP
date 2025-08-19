@@ -34,6 +34,12 @@ type Invoker interface {
 	//
 	// GET /train/{trainNumber}
 	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
+	// PostReservation invokes postReservation operation.
+	//
+	// 予約情報の作成.
+	//
+	// POST /reservation
+	PostReservation(ctx context.Context, request *PostReservationReq) error
 }
 
 // Client implements OAS client.
@@ -135,7 +141,7 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 			Explode: false,
 		})
 		if err := func() error {
-			return e.EncodeValue(conv.StringToString(params.TrainNumber))
+			return e.EncodeValue(conv.IntToString(params.TrainNumber))
 		}(); err != nil {
 			return res, errors.Wrap(err, "encode path")
 		}
@@ -162,6 +168,81 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 
 	stage = "DecodeResponse"
 	result, err := decodeGetTrainInfoResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// PostReservation invokes postReservation operation.
+//
+// 予約情報の作成.
+//
+// POST /reservation
+func (c *Client) PostReservation(ctx context.Context, request *PostReservationReq) error {
+	_, err := c.sendPostReservation(ctx, request)
+	return err
+}
+
+func (c *Client) sendPostReservation(ctx context.Context, request *PostReservationReq) (res *PostReservationOK, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("postReservation"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/reservation"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, PostReservationOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/reservation"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodePostReservationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodePostReservationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

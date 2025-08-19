@@ -49,35 +49,69 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/train/"
+		case '/': // Prefix: "/"
 
-			if l := len("/train/"); len(elem) >= l && elem[0:l] == "/train/" {
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
-			// Param: "trainNumber"
-			// Leaf parameter, slashes are prohibited
-			idx := strings.IndexByte(elem, '/')
-			if idx >= 0 {
+			if len(elem) == 0 {
 				break
 			}
-			args[0] = elem
-			elem = ""
+			switch elem[0] {
+			case 'r': // Prefix: "reservation"
 
-			if len(elem) == 0 {
-				// Leaf node.
-				switch r.Method {
-				case "GET":
-					s.handleGetTrainInfoRequest([1]string{
-						args[0],
-					}, elemIsEscaped, w, r)
-				default:
-					s.notAllowed(w, r, "GET")
+				if l := len("reservation"); len(elem) >= l && elem[0:l] == "reservation" {
+					elem = elem[l:]
+				} else {
+					break
 				}
 
-				return
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "POST":
+						s.handlePostReservationRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+
+			case 't': // Prefix: "train/"
+
+				if l := len("train/"); len(elem) >= l && elem[0:l] == "train/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "trainNumber"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "GET":
+						s.handleGetTrainInfoRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET")
+					}
+
+					return
+				}
+
 			}
 
 		}
@@ -160,37 +194,75 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/train/"
+		case '/': // Prefix: "/"
 
-			if l := len("/train/"); len(elem) >= l && elem[0:l] == "/train/" {
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
-			// Param: "trainNumber"
-			// Leaf parameter, slashes are prohibited
-			idx := strings.IndexByte(elem, '/')
-			if idx >= 0 {
+			if len(elem) == 0 {
 				break
 			}
-			args[0] = elem
-			elem = ""
+			switch elem[0] {
+			case 'r': // Prefix: "reservation"
 
-			if len(elem) == 0 {
-				// Leaf node.
-				switch method {
-				case "GET":
-					r.name = GetTrainInfoOperation
-					r.summary = "列車情報の取得"
-					r.operationID = "getTrainInfo"
-					r.pathPattern = "/train/{trainNumber}"
-					r.args = args
-					r.count = 1
-					return r, true
-				default:
-					return
+				if l := len("reservation"); len(elem) >= l && elem[0:l] == "reservation" {
+					elem = elem[l:]
+				} else {
+					break
 				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "POST":
+						r.name = PostReservationOperation
+						r.summary = "予約情報の作成"
+						r.operationID = "postReservation"
+						r.pathPattern = "/reservation"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
+			case 't': // Prefix: "train/"
+
+				if l := len("train/"); len(elem) >= l && elem[0:l] == "train/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "trainNumber"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "GET":
+						r.name = GetTrainInfoOperation
+						r.summary = "列車情報の取得"
+						r.operationID = "getTrainInfo"
+						r.pathPattern = "/train/{trainNumber}"
+						r.args = args
+						r.count = 1
+						return r, true
+					default:
+						return
+					}
+				}
+
 			}
 
 		}

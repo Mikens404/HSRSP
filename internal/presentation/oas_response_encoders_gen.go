@@ -24,3 +24,10 @@ func encodeGetTrainInfoResponse(response *TrainInfo, w http.ResponseWriter, span
 
 	return nil
 }
+
+func encodePostReservationResponse(response *PostReservationOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}

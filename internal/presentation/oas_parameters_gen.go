@@ -18,7 +18,7 @@ import (
 // GetTrainInfoParams is parameters of getTrainInfo operation.
 type GetTrainInfoParams struct {
 	// 列車番号.
-	TrainNumber string
+	TrainNumber int
 }
 
 func unpackGetTrainInfoParams(packed middleware.Parameters) (params GetTrainInfoParams) {
@@ -27,7 +27,7 @@ func unpackGetTrainInfoParams(packed middleware.Parameters) (params GetTrainInfo
 			Name: "trainNumber",
 			In:   "path",
 		}
-		params.TrainNumber = packed[key].(string)
+		params.TrainNumber = packed[key].(int)
 	}
 	return params
 }
@@ -57,7 +57,7 @@ func decodeGetTrainInfoParams(args [1]string, argsEscaped bool, r *http.Request)
 					return err
 				}
 
-				c, err := conv.ToString(val)
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}

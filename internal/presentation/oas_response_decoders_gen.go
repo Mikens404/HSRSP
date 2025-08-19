@@ -54,3 +54,12 @@ func decodeGetTrainInfoResponse(resp *http.Response) (res *TrainInfo, _ error) {
 	}
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
+
+func decodePostReservationResponse(resp *http.Response) (res *PostReservationOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &PostReservationOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}

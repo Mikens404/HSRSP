@@ -144,6 +144,60 @@ func (o OptTrainInfoTimeTable) Or(d TrainInfoTimeTable) TrainInfoTimeTable {
 	return d
 }
 
+// PostReservationOK is response for PostReservation operation.
+type PostReservationOK struct{}
+
+type PostReservationReq struct {
+	// 予約列車番号.
+	ReservationTrainNumber int `json:"reservationTrainNumber"`
+	// 予約席.
+	ReservationSeat string `json:"reservationSeat"`
+	// 予約人数.
+	ReservationPeople int `json:"reservationPeople"`
+	// 顧客情報.
+	CustomerInfo string `json:"customerInfo"`
+}
+
+// GetReservationTrainNumber returns the value of ReservationTrainNumber.
+func (s *PostReservationReq) GetReservationTrainNumber() int {
+	return s.ReservationTrainNumber
+}
+
+// GetReservationSeat returns the value of ReservationSeat.
+func (s *PostReservationReq) GetReservationSeat() string {
+	return s.ReservationSeat
+}
+
+// GetReservationPeople returns the value of ReservationPeople.
+func (s *PostReservationReq) GetReservationPeople() int {
+	return s.ReservationPeople
+}
+
+// GetCustomerInfo returns the value of CustomerInfo.
+func (s *PostReservationReq) GetCustomerInfo() string {
+	return s.CustomerInfo
+}
+
+// SetReservationTrainNumber sets the value of ReservationTrainNumber.
+func (s *PostReservationReq) SetReservationTrainNumber(val int) {
+	s.ReservationTrainNumber = val
+}
+
+// SetReservationSeat sets the value of ReservationSeat.
+func (s *PostReservationReq) SetReservationSeat(val string) {
+	s.ReservationSeat = val
+}
+
+// SetReservationPeople sets the value of ReservationPeople.
+func (s *PostReservationReq) SetReservationPeople(val int) {
+	s.ReservationPeople = val
+}
+
+// SetCustomerInfo sets the value of CustomerInfo.
+func (s *PostReservationReq) SetCustomerInfo(val string) {
+	s.CustomerInfo = val
+}
+
 // Ref: #/components/schemas/trainInfo
 type TrainInfo struct {
 	// 列車番号.

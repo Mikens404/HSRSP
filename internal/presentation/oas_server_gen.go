@@ -14,6 +14,12 @@ type Handler interface {
 	//
 	// GET /train/{trainNumber}
 	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
+	// PostReservation implements postReservation operation.
+	//
+	// 予約情報の作成.
+	//
+	// POST /reservation
+	PostReservation(ctx context.Context, req *PostReservationReq) error
 }
 
 // Server implements http server based on OpenAPI v3 specification and

@@ -21,3 +21,12 @@ var _ Handler = UnimplementedHandler{}
 func (UnimplementedHandler) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (r *TrainInfo, _ error) {
 	return r, ht.ErrNotImplemented
 }
+
+// PostReservation implements postReservation operation.
+//
+// 予約情報の作成.
+//
+// POST /reservation
+func (UnimplementedHandler) PostReservation(ctx context.Context, req *PostReservationReq) error {
+	return ht.ErrNotImplemented
+}
