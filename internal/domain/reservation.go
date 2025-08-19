@@ -22,6 +22,6 @@ type Reservation struct {
 }
 
 type ReservationSeat struct {
-	carNumber    int    // 何両目
-        seatNumber   string // 席番
+	carNumber  int    // 何両目
+	seatNumber string // 席番
 }
