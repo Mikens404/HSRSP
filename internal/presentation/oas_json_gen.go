@@ -78,22 +78,22 @@ func (s *GetReservationOKItem) Encode(e *jx.Encoder) {
 // encodeFields encodes fields.
 func (s *GetReservationOKItem) encodeFields(e *jx.Encoder) {
 	{
-		if s.Code.Set {
-			e.FieldStart("code")
-			s.Code.Encode(e)
+		if s.SeatNumber.Set {
+			e.FieldStart("seatNumber")
+			s.SeatNumber.Encode(e)
 		}
 	}
 	{
-		if s.Text.Set {
-			e.FieldStart("text")
-			s.Text.Encode(e)
+		if s.Status.Set {
+			e.FieldStart("status")
+			s.Status.Encode(e)
 		}
 	}
 }
 
 var jsonFieldsNameOfGetReservationOKItem = [2]string{
-	0: "code",
-	1: "text",
+	0: "seatNumber",
+	1: "status",
 }
 
 // Decode decodes GetReservationOKItem from json.
@@ -104,25 +104,25 @@ func (s *GetReservationOKItem) Decode(d *jx.Decoder) error {
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "code":
+		case "seatNumber":
 			if err := func() error {
-				s.Code.Reset()
-				if err := s.Code.Decode(d); err != nil {
+				s.SeatNumber.Reset()
+				if err := s.SeatNumber.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"code\"")
+				return errors.Wrap(err, "decode field \"seatNumber\"")
 			}
-		case "text":
+		case "status":
 			if err := func() error {
-				s.Text.Reset()
-				if err := s.Text.Decode(d); err != nil {
+				s.Status.Reset()
+				if err := s.Status.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"text\"")
+				return errors.Wrap(err, "decode field \"status\"")
 			}
 		default:
 			return d.Skip()
@@ -411,7 +411,7 @@ func (s *PatchReservationReq) encodeFields(e *jx.Encoder) {
 	}
 	{
 		if s.GetOffStation.Set {
-			e.FieldStart("get_offStation")
+			e.FieldStart("getOffStation")
 			s.GetOffStation.Encode(e)
 		}
 	}
@@ -448,7 +448,7 @@ func (s *PatchReservationReq) encodeFields(e *jx.Encoder) {
 var jsonFieldsNameOfPatchReservationReq = [7]string{
 	0: "reservationTrainNumber",
 	1: "boardingStation",
-	2: "get_offStation",
+	2: "getOffStation",
 	3: "reservationSeatList",
 	4: "reservationPeople",
 	5: "reservationStatus",
@@ -483,7 +483,7 @@ func (s *PatchReservationReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"boardingStation\"")
 			}
-		case "get_offStation":
+		case "getOffStation":
 			if err := func() error {
 				s.GetOffStation.Reset()
 				if err := s.GetOffStation.Decode(d); err != nil {
@@ -491,7 +491,7 @@ func (s *PatchReservationReq) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"get_offStation\"")
+				return errors.Wrap(err, "decode field \"getOffStation\"")
 			}
 		case "reservationSeatList":
 			if err := func() error {
@@ -582,12 +582,12 @@ func (s *PatchReservationReqReservationStatus) Decode(d *jx.Decoder) error {
 	}
 	// Try to use constant string.
 	switch PatchReservationReqReservationStatus(v) {
-	case PatchReservationReqReservationStatus_0:
-		*s = PatchReservationReqReservationStatus_0
-	case PatchReservationReqReservationStatus_1:
-		*s = PatchReservationReqReservationStatus_1
-	case PatchReservationReqReservationStatus_2:
-		*s = PatchReservationReqReservationStatus_2
+	case PatchReservationReqReservationStatusRESERVED:
+		*s = PatchReservationReqReservationStatusRESERVED
+	case PatchReservationReqReservationStatusPROVISIONAL:
+		*s = PatchReservationReqReservationStatusPROVISIONAL
+	case PatchReservationReqReservationStatusCANCELLED:
+		*s = PatchReservationReqReservationStatusCANCELLED
 	default:
 		*s = PatchReservationReqReservationStatus(v)
 	}
@@ -626,18 +626,16 @@ func (s *PostReservationReq) encodeFields(e *jx.Encoder) {
 		e.Str(s.BoardingStation)
 	}
 	{
-		e.FieldStart("get_offStation")
+		e.FieldStart("getOffStation")
 		e.Str(s.GetOffStation)
 	}
 	{
-		if s.ReservationSeatList != nil {
-			e.FieldStart("reservationSeatList")
-			e.ArrStart()
-			for _, elem := range s.ReservationSeatList {
-				e.Str(elem)
-			}
-			e.ArrEnd()
+		e.FieldStart("reservationSeatList")
+		e.ArrStart()
+		for _, elem := range s.ReservationSeatList {
+			e.Str(elem)
 		}
+		e.ArrEnd()
 	}
 	{
 		e.FieldStart("reservationPeople")
@@ -652,7 +650,7 @@ func (s *PostReservationReq) encodeFields(e *jx.Encoder) {
 var jsonFieldsNameOfPostReservationReq = [6]string{
 	0: "reservationTrainNumber",
 	1: "boardingStation",
-	2: "get_offStation",
+	2: "getOffStation",
 	3: "reservationSeatList",
 	4: "reservationPeople",
 	5: "customerInfo",
@@ -691,7 +689,7 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"boardingStation\"")
 			}
-		case "get_offStation":
+		case "getOffStation":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
 				v, err := d.Str()
@@ -701,9 +699,10 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"get_offStation\"")
+				return errors.Wrap(err, "decode field \"getOffStation\"")
 			}
 		case "reservationSeatList":
+			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				s.ReservationSeatList = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
@@ -756,7 +755,7 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00110111,
+		0b00111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -831,7 +830,7 @@ func (s *ReservationInfo) encodeFields(e *jx.Encoder) {
 	}
 	{
 		if s.GetOffStation.Set {
-			e.FieldStart("get_offStation")
+			e.FieldStart("getOffStation")
 			s.GetOffStation.Encode(e)
 		}
 	}
@@ -875,7 +874,7 @@ var jsonFieldsNameOfReservationInfo = [9]string{
 	0: "reservationNumber",
 	1: "reservationTrainNumber",
 	2: "boardingStation",
-	3: "get_offStation",
+	3: "getOffStation",
 	4: "reservationSeatList",
 	5: "amount",
 	6: "reservationPeople",
@@ -921,7 +920,7 @@ func (s *ReservationInfo) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"boardingStation\"")
 			}
-		case "get_offStation":
+		case "getOffStation":
 			if err := func() error {
 				s.GetOffStation.Reset()
 				if err := s.GetOffStation.Decode(d); err != nil {
@@ -929,7 +928,7 @@ func (s *ReservationInfo) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"get_offStation\"")
+				return errors.Wrap(err, "decode field \"getOffStation\"")
 			}
 		case "reservationSeatList":
 			if err := func() error {
@@ -1030,12 +1029,12 @@ func (s *ReservationInfoReservationStatus) Decode(d *jx.Decoder) error {
 	}
 	// Try to use constant string.
 	switch ReservationInfoReservationStatus(v) {
-	case ReservationInfoReservationStatus_0:
-		*s = ReservationInfoReservationStatus_0
-	case ReservationInfoReservationStatus_1:
-		*s = ReservationInfoReservationStatus_1
-	case ReservationInfoReservationStatus_2:
-		*s = ReservationInfoReservationStatus_2
+	case ReservationInfoReservationStatusRESERVED:
+		*s = ReservationInfoReservationStatusRESERVED
+	case ReservationInfoReservationStatusPROVISIONAL:
+		*s = ReservationInfoReservationStatusPROVISIONAL
+	case ReservationInfoReservationStatusCANCELLED:
+		*s = ReservationInfoReservationStatusCANCELLED
 	default:
 		*s = ReservationInfoReservationStatus(v)
 	}
@@ -1200,22 +1199,22 @@ func (s *TrainInfoTimeTableItem) Encode(e *jx.Encoder) {
 // encodeFields encodes fields.
 func (s *TrainInfoTimeTableItem) encodeFields(e *jx.Encoder) {
 	{
-		if s.Code.Set {
-			e.FieldStart("code")
-			s.Code.Encode(e)
+		if s.Station.Set {
+			e.FieldStart("station")
+			s.Station.Encode(e)
 		}
 	}
 	{
-		if s.Text.Set {
-			e.FieldStart("text")
-			s.Text.Encode(e, json.EncodeDateTime)
+		if s.Time.Set {
+			e.FieldStart("time")
+			s.Time.Encode(e, json.EncodeDateTime)
 		}
 	}
 }
 
 var jsonFieldsNameOfTrainInfoTimeTableItem = [2]string{
-	0: "code",
-	1: "text",
+	0: "station",
+	1: "time",
 }
 
 // Decode decodes TrainInfoTimeTableItem from json.
@@ -1226,25 +1225,25 @@ func (s *TrainInfoTimeTableItem) Decode(d *jx.Decoder) error {
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "code":
+		case "station":
 			if err := func() error {
-				s.Code.Reset()
-				if err := s.Code.Decode(d); err != nil {
+				s.Station.Reset()
+				if err := s.Station.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"code\"")
+				return errors.Wrap(err, "decode field \"station\"")
 			}
-		case "text":
+		case "time":
 			if err := func() error {
-				s.Text.Reset()
-				if err := s.Text.Decode(d, json.DecodeDateTime); err != nil {
+				s.Time.Reset()
+				if err := s.Time.Decode(d, json.DecodeDateTime); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"text\"")
+				return errors.Wrap(err, "decode field \"time\"")
 			}
 		default:
 			return d.Skip()

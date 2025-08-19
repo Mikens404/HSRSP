@@ -40,15 +40,38 @@ func (s *PatchReservationReq) Validate() error {
 
 func (s PatchReservationReqReservationStatus) Validate() error {
 	switch s {
-	case "予約済":
+	case "RESERVED":
 		return nil
-	case "仮予約":
+	case "PROVISIONAL":
 		return nil
-	case "キャンセル":
+	case "CANCELLED":
 		return nil
 	default:
 		return errors.Errorf("invalid value: %v", s)
 	}
+}
+
+func (s *PostReservationReq) Validate() error {
+	if s == nil {
+		return validate.ErrNilPointer
+	}
+
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.ReservationSeatList == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "reservationSeatList",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
 }
 
 func (s *ReservationInfo) Validate() error {
@@ -83,11 +106,11 @@ func (s *ReservationInfo) Validate() error {
 
 func (s ReservationInfoReservationStatus) Validate() error {
 	switch s {
-	case "予約済":
+	case "RESERVED":
 		return nil
-	case "仮予約":
+	case "PROVISIONAL":
 		return nil
-	case "キャンセル":
+	case "CANCELLED":
 		return nil
 	default:
 		return errors.Errorf("invalid value: %v", s)

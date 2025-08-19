@@ -21,28 +21,28 @@ func (s *GetReservationOK) init() GetReservationOK {
 }
 
 type GetReservationOKItem struct {
-	Code OptString `json:"code"`
-	Text OptBool   `json:"text"`
+	SeatNumber OptString `json:"seatNumber"`
+	Status     OptBool   `json:"status"`
 }
 
-// GetCode returns the value of Code.
-func (s *GetReservationOKItem) GetCode() OptString {
-	return s.Code
+// GetSeatNumber returns the value of SeatNumber.
+func (s *GetReservationOKItem) GetSeatNumber() OptString {
+	return s.SeatNumber
 }
 
-// GetText returns the value of Text.
-func (s *GetReservationOKItem) GetText() OptBool {
-	return s.Text
+// GetStatus returns the value of Status.
+func (s *GetReservationOKItem) GetStatus() OptBool {
+	return s.Status
 }
 
-// SetCode sets the value of Code.
-func (s *GetReservationOKItem) SetCode(val OptString) {
-	s.Code = val
+// SetSeatNumber sets the value of SeatNumber.
+func (s *GetReservationOKItem) SetSeatNumber(val OptString) {
+	s.SeatNumber = val
 }
 
-// SetText sets the value of Text.
-func (s *GetReservationOKItem) SetText(val OptBool) {
-	s.Text = val
+// SetStatus sets the value of Status.
+func (s *GetReservationOKItem) SetStatus(val OptBool) {
+	s.Status = val
 }
 
 // NewOptBool returns new OptBool with value set to v.
@@ -376,7 +376,7 @@ type PatchReservationReq struct {
 	// 乗車駅.
 	BoardingStation OptString `json:"boardingStation"`
 	// 降車駅.
-	GetOffStation OptString `json:"get_offStation"`
+	GetOffStation OptString `json:"getOffStation"`
 	// 予約席.
 	ReservationSeatList []string `json:"reservationSeatList"`
 	// 予約人数.
@@ -461,28 +461,28 @@ func (s *PatchReservationReq) SetCustomerInfo(val OptString) {
 type PatchReservationReqReservationStatus string
 
 const (
-	PatchReservationReqReservationStatus_0 PatchReservationReqReservationStatus = "予約済"
-	PatchReservationReqReservationStatus_1 PatchReservationReqReservationStatus = "仮予約"
-	PatchReservationReqReservationStatus_2 PatchReservationReqReservationStatus = "キャンセル"
+	PatchReservationReqReservationStatusRESERVED    PatchReservationReqReservationStatus = "RESERVED"
+	PatchReservationReqReservationStatusPROVISIONAL PatchReservationReqReservationStatus = "PROVISIONAL"
+	PatchReservationReqReservationStatusCANCELLED   PatchReservationReqReservationStatus = "CANCELLED"
 )
 
 // AllValues returns all PatchReservationReqReservationStatus values.
 func (PatchReservationReqReservationStatus) AllValues() []PatchReservationReqReservationStatus {
 	return []PatchReservationReqReservationStatus{
-		PatchReservationReqReservationStatus_0,
-		PatchReservationReqReservationStatus_1,
-		PatchReservationReqReservationStatus_2,
+		PatchReservationReqReservationStatusRESERVED,
+		PatchReservationReqReservationStatusPROVISIONAL,
+		PatchReservationReqReservationStatusCANCELLED,
 	}
 }
 
 // MarshalText implements encoding.TextMarshaler.
 func (s PatchReservationReqReservationStatus) MarshalText() ([]byte, error) {
 	switch s {
-	case PatchReservationReqReservationStatus_0:
+	case PatchReservationReqReservationStatusRESERVED:
 		return []byte(s), nil
-	case PatchReservationReqReservationStatus_1:
+	case PatchReservationReqReservationStatusPROVISIONAL:
 		return []byte(s), nil
-	case PatchReservationReqReservationStatus_2:
+	case PatchReservationReqReservationStatusCANCELLED:
 		return []byte(s), nil
 	default:
 		return nil, errors.Errorf("invalid value: %q", s)
@@ -492,14 +492,14 @@ func (s PatchReservationReqReservationStatus) MarshalText() ([]byte, error) {
 // UnmarshalText implements encoding.TextUnmarshaler.
 func (s *PatchReservationReqReservationStatus) UnmarshalText(data []byte) error {
 	switch PatchReservationReqReservationStatus(data) {
-	case PatchReservationReqReservationStatus_0:
-		*s = PatchReservationReqReservationStatus_0
+	case PatchReservationReqReservationStatusRESERVED:
+		*s = PatchReservationReqReservationStatusRESERVED
 		return nil
-	case PatchReservationReqReservationStatus_1:
-		*s = PatchReservationReqReservationStatus_1
+	case PatchReservationReqReservationStatusPROVISIONAL:
+		*s = PatchReservationReqReservationStatusPROVISIONAL
 		return nil
-	case PatchReservationReqReservationStatus_2:
-		*s = PatchReservationReqReservationStatus_2
+	case PatchReservationReqReservationStatusCANCELLED:
+		*s = PatchReservationReqReservationStatusCANCELLED
 		return nil
 	default:
 		return errors.Errorf("invalid value: %q", data)
@@ -515,7 +515,7 @@ type PostReservationReq struct {
 	// 乗車駅.
 	BoardingStation string `json:"boardingStation"`
 	// 降車駅.
-	GetOffStation string `json:"get_offStation"`
+	GetOffStation string `json:"getOffStation"`
 	// 予約席.
 	ReservationSeatList []string `json:"reservationSeatList"`
 	// 予約人数.
@@ -593,7 +593,7 @@ type ReservationInfo struct {
 	// 乗車駅.
 	BoardingStation OptString `json:"boardingStation"`
 	// 降車駅.
-	GetOffStation OptString `json:"get_offStation"`
+	GetOffStation OptString `json:"getOffStation"`
 	// 予約席.
 	ReservationSeatList []string `json:"reservationSeatList"`
 	// 料金.
@@ -700,28 +700,28 @@ func (s *ReservationInfo) SetCustomerInfo(val OptString) {
 type ReservationInfoReservationStatus string
 
 const (
-	ReservationInfoReservationStatus_0 ReservationInfoReservationStatus = "予約済"
-	ReservationInfoReservationStatus_1 ReservationInfoReservationStatus = "仮予約"
-	ReservationInfoReservationStatus_2 ReservationInfoReservationStatus = "キャンセル"
+	ReservationInfoReservationStatusRESERVED    ReservationInfoReservationStatus = "RESERVED"
+	ReservationInfoReservationStatusPROVISIONAL ReservationInfoReservationStatus = "PROVISIONAL"
+	ReservationInfoReservationStatusCANCELLED   ReservationInfoReservationStatus = "CANCELLED"
 )
 
 // AllValues returns all ReservationInfoReservationStatus values.
 func (ReservationInfoReservationStatus) AllValues() []ReservationInfoReservationStatus {
 	return []ReservationInfoReservationStatus{
-		ReservationInfoReservationStatus_0,
-		ReservationInfoReservationStatus_1,
-		ReservationInfoReservationStatus_2,
+		ReservationInfoReservationStatusRESERVED,
+		ReservationInfoReservationStatusPROVISIONAL,
+		ReservationInfoReservationStatusCANCELLED,
 	}
 }
 
 // MarshalText implements encoding.TextMarshaler.
 func (s ReservationInfoReservationStatus) MarshalText() ([]byte, error) {
 	switch s {
-	case ReservationInfoReservationStatus_0:
+	case ReservationInfoReservationStatusRESERVED:
 		return []byte(s), nil
-	case ReservationInfoReservationStatus_1:
+	case ReservationInfoReservationStatusPROVISIONAL:
 		return []byte(s), nil
-	case ReservationInfoReservationStatus_2:
+	case ReservationInfoReservationStatusCANCELLED:
 		return []byte(s), nil
 	default:
 		return nil, errors.Errorf("invalid value: %q", s)
@@ -731,14 +731,14 @@ func (s ReservationInfoReservationStatus) MarshalText() ([]byte, error) {
 // UnmarshalText implements encoding.TextUnmarshaler.
 func (s *ReservationInfoReservationStatus) UnmarshalText(data []byte) error {
 	switch ReservationInfoReservationStatus(data) {
-	case ReservationInfoReservationStatus_0:
-		*s = ReservationInfoReservationStatus_0
+	case ReservationInfoReservationStatusRESERVED:
+		*s = ReservationInfoReservationStatusRESERVED
 		return nil
-	case ReservationInfoReservationStatus_1:
-		*s = ReservationInfoReservationStatus_1
+	case ReservationInfoReservationStatusPROVISIONAL:
+		*s = ReservationInfoReservationStatusPROVISIONAL
 		return nil
-	case ReservationInfoReservationStatus_2:
-		*s = ReservationInfoReservationStatus_2
+	case ReservationInfoReservationStatusCANCELLED:
+		*s = ReservationInfoReservationStatusCANCELLED
 		return nil
 	default:
 		return errors.Errorf("invalid value: %q", data)
@@ -786,26 +786,26 @@ func (s *TrainInfoTimeTable) init() TrainInfoTimeTable {
 }
 
 type TrainInfoTimeTableItem struct {
-	Code OptString   `json:"code"`
-	Text OptDateTime `json:"text"`
+	Station OptString   `json:"station"`
+	Time    OptDateTime `json:"time"`
 }
 
-// GetCode returns the value of Code.
-func (s *TrainInfoTimeTableItem) GetCode() OptString {
-	return s.Code
+// GetStation returns the value of Station.
+func (s *TrainInfoTimeTableItem) GetStation() OptString {
+	return s.Station
 }
 
-// GetText returns the value of Text.
-func (s *TrainInfoTimeTableItem) GetText() OptDateTime {
-	return s.Text
+// GetTime returns the value of Time.
+func (s *TrainInfoTimeTableItem) GetTime() OptDateTime {
+	return s.Time
 }
 
-// SetCode sets the value of Code.
-func (s *TrainInfoTimeTableItem) SetCode(val OptString) {
-	s.Code = val
+// SetStation sets the value of Station.
+func (s *TrainInfoTimeTableItem) SetStation(val OptString) {
+	s.Station = val
 }
 
-// SetText sets the value of Text.
-func (s *TrainInfoTimeTableItem) SetText(val OptDateTime) {
-	s.Text = val
+// SetTime sets the value of Time.
+func (s *TrainInfoTimeTableItem) SetTime(val OptDateTime) {
+	s.Time = val
 }

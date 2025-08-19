@@ -51,12 +51,10 @@ paths:
                 additionalProperties:
                   type: object
                   properties:
-                    code:
+                    seatNumber:
                       type: string
-                    text:
+                    status:
                       type: boolean
-                required:
-                  - reservationSeat
   /reservation:
     post:
       operationId: postReservation
@@ -73,7 +71,7 @@ paths:
                 boardingStation:
                   type: string
                   description: 乗車駅
-                get_offStation:
+                getOffStation:
                   type: string
                   description: 降車駅
                 reservationSeatList:
@@ -90,8 +88,8 @@ paths:
               required:
                 - reservationTrainNumber
                 - boardingStation
-                - get_offStation
-                - reservationSeat
+                - getOffStation
+                - reservationSeatList
                 - reservationPeople
                 - customerInfo
         required: true
@@ -137,7 +135,7 @@ paths:
                 boardingStation:
                   type: string
                   description: 乗車駅
-                get_offStation:
+                getOffStation:
                   type: string
                   description: 降車駅
                 reservationSeatList:
@@ -151,7 +149,7 @@ paths:
                 reservationStatus:
                   type: string
                   description: 予約状況
-                  enum: [予約済, 仮予約, キャンセル]
+                  enum: [RESERVED, PROVISIONAL, CANCELLED] # 予約済,仮予約,キャンセル
                 customerInfo:
                   type: string
                   description: 顧客情報
@@ -173,9 +171,9 @@ components:
           additionalProperties:
             type: object
             properties:
-              code:
+              station:
                 type: string
-              text:
+              time:
                 type: string
                 format: date-time
     reservationInfo:
@@ -190,7 +188,7 @@ components:
         boardingStation:
           type: string
           description: 乗車駅
-        get_offStation:
+        getOffStation:
           type: string
           description: 降車駅
         reservationSeatList:
@@ -207,7 +205,7 @@ components:
         reservationStatus:
           type: string
           description: 予約状況
-          enum: [予約済, 仮予約, キャンセル]
+          enum: [RESERVED, PROVISIONAL, CANCELLED] # 予約済,仮予約,キャンセル
         customerInfo:
           type: string
           description: 顧客情報
