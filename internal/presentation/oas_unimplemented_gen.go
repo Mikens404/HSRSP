@@ -13,6 +13,15 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// GetReservationInfo implements getReservationInfo operation.
+//
+// 個別の予約情報取得.
+//
+// GET /reservation
+func (UnimplementedHandler) GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (r *ReservationInfo, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetTrainInfo implements getTrainInfo operation.
 //
 // 列車情報の取得.
@@ -20,6 +29,15 @@ var _ Handler = UnimplementedHandler{}
 // GET /train/{trainNumber}
 func (UnimplementedHandler) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (r *TrainInfo, _ error) {
 	return r, ht.ErrNotImplemented
+}
+
+// PatchReservation implements patchReservation operation.
+//
+// 予約情報更新.
+//
+// PATCH /reservation
+func (UnimplementedHandler) PatchReservation(ctx context.Context, req *PatchReservationReq, params PatchReservationParams) error {
+	return ht.ErrNotImplemented
 }
 
 // PostReservation implements postReservation operation.

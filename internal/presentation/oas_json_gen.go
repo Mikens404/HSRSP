@@ -49,6 +49,41 @@ func (s *OptDateTime) UnmarshalJSON(data []byte) error {
 	return s.Decode(d, json.DecodeDateTime)
 }
 
+// Encode encodes int as json.
+func (o OptInt) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Int(int(o.Value))
+}
+
+// Decode decodes int from json.
+func (o *OptInt) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptInt to nil")
+	}
+	o.Set = true
+	v, err := d.Int()
+	if err != nil {
+		return err
+	}
+	o.Value = int(v)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptInt) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptInt) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes string as json.
 func (o OptString) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -114,6 +149,137 @@ func (s OptTrainInfoTimeTable) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptTrainInfoTimeTable) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *PatchReservationReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *PatchReservationReq) encodeFields(e *jx.Encoder) {
+	{
+		if s.ReservationTrainNumber.Set {
+			e.FieldStart("reservationTrainNumber")
+			s.ReservationTrainNumber.Encode(e)
+		}
+	}
+	{
+		if s.ReservationSeatInfo.Set {
+			e.FieldStart("reservationSeatInfo")
+			s.ReservationSeatInfo.Encode(e)
+		}
+	}
+	{
+		if s.ReservationPeople.Set {
+			e.FieldStart("reservationPeople")
+			s.ReservationPeople.Encode(e)
+		}
+	}
+	{
+		if s.ReservationStatus.Set {
+			e.FieldStart("reservationStatus")
+			s.ReservationStatus.Encode(e)
+		}
+	}
+	{
+		if s.CustomerInfo.Set {
+			e.FieldStart("customerInfo")
+			s.CustomerInfo.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfPatchReservationReq = [5]string{
+	0: "reservationTrainNumber",
+	1: "reservationSeatInfo",
+	2: "reservationPeople",
+	3: "reservationStatus",
+	4: "customerInfo",
+}
+
+// Decode decodes PatchReservationReq from json.
+func (s *PatchReservationReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PatchReservationReq to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "reservationTrainNumber":
+			if err := func() error {
+				s.ReservationTrainNumber.Reset()
+				if err := s.ReservationTrainNumber.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationTrainNumber\"")
+			}
+		case "reservationSeatInfo":
+			if err := func() error {
+				s.ReservationSeatInfo.Reset()
+				if err := s.ReservationSeatInfo.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationSeatInfo\"")
+			}
+		case "reservationPeople":
+			if err := func() error {
+				s.ReservationPeople.Reset()
+				if err := s.ReservationPeople.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationPeople\"")
+			}
+		case "reservationStatus":
+			if err := func() error {
+				s.ReservationStatus.Reset()
+				if err := s.ReservationStatus.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationStatus\"")
+			}
+		case "customerInfo":
+			if err := func() error {
+				s.CustomerInfo.Reset()
+				if err := s.CustomerInfo.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"customerInfo\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode PatchReservationReq")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PatchReservationReq) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PatchReservationReq) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -261,6 +427,171 @@ func (s *PostReservationReq) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *PostReservationReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *ReservationInfo) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *ReservationInfo) encodeFields(e *jx.Encoder) {
+	{
+		if s.ReservationNumber.Set {
+			e.FieldStart("reservationNumber")
+			s.ReservationNumber.Encode(e)
+		}
+	}
+	{
+		if s.ReservationTrainNumber.Set {
+			e.FieldStart("reservationTrainNumber")
+			s.ReservationTrainNumber.Encode(e)
+		}
+	}
+	{
+		if s.ReservationSeatInfo.Set {
+			e.FieldStart("reservationSeatInfo")
+			s.ReservationSeatInfo.Encode(e)
+		}
+	}
+	{
+		if s.Amount.Set {
+			e.FieldStart("amount")
+			s.Amount.Encode(e)
+		}
+	}
+	{
+		if s.ReservationPeople.Set {
+			e.FieldStart("reservationPeople")
+			s.ReservationPeople.Encode(e)
+		}
+	}
+	{
+		if s.ReservationStatus.Set {
+			e.FieldStart("reservationStatus")
+			s.ReservationStatus.Encode(e)
+		}
+	}
+	{
+		if s.CustomerInfo.Set {
+			e.FieldStart("customerInfo")
+			s.CustomerInfo.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfReservationInfo = [7]string{
+	0: "reservationNumber",
+	1: "reservationTrainNumber",
+	2: "reservationSeatInfo",
+	3: "amount",
+	4: "reservationPeople",
+	5: "reservationStatus",
+	6: "customerInfo",
+}
+
+// Decode decodes ReservationInfo from json.
+func (s *ReservationInfo) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ReservationInfo to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "reservationNumber":
+			if err := func() error {
+				s.ReservationNumber.Reset()
+				if err := s.ReservationNumber.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationNumber\"")
+			}
+		case "reservationTrainNumber":
+			if err := func() error {
+				s.ReservationTrainNumber.Reset()
+				if err := s.ReservationTrainNumber.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationTrainNumber\"")
+			}
+		case "reservationSeatInfo":
+			if err := func() error {
+				s.ReservationSeatInfo.Reset()
+				if err := s.ReservationSeatInfo.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationSeatInfo\"")
+			}
+		case "amount":
+			if err := func() error {
+				s.Amount.Reset()
+				if err := s.Amount.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"amount\"")
+			}
+		case "reservationPeople":
+			if err := func() error {
+				s.ReservationPeople.Reset()
+				if err := s.ReservationPeople.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationPeople\"")
+			}
+		case "reservationStatus":
+			if err := func() error {
+				s.ReservationStatus.Reset()
+				if err := s.ReservationStatus.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationStatus\"")
+			}
+		case "customerInfo":
+			if err := func() error {
+				s.CustomerInfo.Reset()
+				if err := s.CustomerInfo.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"customerInfo\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode ReservationInfo")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *ReservationInfo) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ReservationInfo) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

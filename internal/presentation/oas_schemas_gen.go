@@ -52,6 +52,52 @@ func (o OptDateTime) Or(d time.Time) time.Time {
 	return d
 }
 
+// NewOptInt returns new OptInt with value set to v.
+func NewOptInt(v int) OptInt {
+	return OptInt{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInt is optional int.
+type OptInt struct {
+	Value int
+	Set   bool
+}
+
+// IsSet returns true if OptInt was set.
+func (o OptInt) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInt) Reset() {
+	var v int
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInt) SetTo(v int) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInt) Get() (v int, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInt) Or(d int) int {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -144,6 +190,72 @@ func (o OptTrainInfoTimeTable) Or(d TrainInfoTimeTable) TrainInfoTimeTable {
 	return d
 }
 
+// PatchReservationOK is response for PatchReservation operation.
+type PatchReservationOK struct{}
+
+type PatchReservationReq struct {
+	// 予約列車番号.
+	ReservationTrainNumber OptInt `json:"reservationTrainNumber"`
+	// 予約席.
+	ReservationSeatInfo OptString `json:"reservationSeatInfo"`
+	// 予約人数.
+	ReservationPeople OptInt `json:"reservationPeople"`
+	// 予約状況(予約済,仮予約,キャンセル).
+	ReservationStatus OptString `json:"reservationStatus"`
+	// 顧客情報.
+	CustomerInfo OptString `json:"customerInfo"`
+}
+
+// GetReservationTrainNumber returns the value of ReservationTrainNumber.
+func (s *PatchReservationReq) GetReservationTrainNumber() OptInt {
+	return s.ReservationTrainNumber
+}
+
+// GetReservationSeatInfo returns the value of ReservationSeatInfo.
+func (s *PatchReservationReq) GetReservationSeatInfo() OptString {
+	return s.ReservationSeatInfo
+}
+
+// GetReservationPeople returns the value of ReservationPeople.
+func (s *PatchReservationReq) GetReservationPeople() OptInt {
+	return s.ReservationPeople
+}
+
+// GetReservationStatus returns the value of ReservationStatus.
+func (s *PatchReservationReq) GetReservationStatus() OptString {
+	return s.ReservationStatus
+}
+
+// GetCustomerInfo returns the value of CustomerInfo.
+func (s *PatchReservationReq) GetCustomerInfo() OptString {
+	return s.CustomerInfo
+}
+
+// SetReservationTrainNumber sets the value of ReservationTrainNumber.
+func (s *PatchReservationReq) SetReservationTrainNumber(val OptInt) {
+	s.ReservationTrainNumber = val
+}
+
+// SetReservationSeatInfo sets the value of ReservationSeatInfo.
+func (s *PatchReservationReq) SetReservationSeatInfo(val OptString) {
+	s.ReservationSeatInfo = val
+}
+
+// SetReservationPeople sets the value of ReservationPeople.
+func (s *PatchReservationReq) SetReservationPeople(val OptInt) {
+	s.ReservationPeople = val
+}
+
+// SetReservationStatus sets the value of ReservationStatus.
+func (s *PatchReservationReq) SetReservationStatus(val OptString) {
+	s.ReservationStatus = val
+}
+
+// SetCustomerInfo sets the value of CustomerInfo.
+func (s *PatchReservationReq) SetCustomerInfo(val OptString) {
+	s.CustomerInfo = val
+}
+
 // PostReservationOK is response for PostReservation operation.
 type PostReservationOK struct{}
 
@@ -195,6 +307,94 @@ func (s *PostReservationReq) SetReservationPeople(val int) {
 
 // SetCustomerInfo sets the value of CustomerInfo.
 func (s *PostReservationReq) SetCustomerInfo(val string) {
+	s.CustomerInfo = val
+}
+
+// Ref: #/components/schemas/reservationInfo
+type ReservationInfo struct {
+	// 予約番号.
+	ReservationNumber OptInt `json:"reservationNumber"`
+	// 予約列車番号.
+	ReservationTrainNumber OptInt `json:"reservationTrainNumber"`
+	// 予約席.
+	ReservationSeatInfo OptString `json:"reservationSeatInfo"`
+	// 料金.
+	Amount OptInt `json:"amount"`
+	// 予約人数.
+	ReservationPeople OptInt `json:"reservationPeople"`
+	// 予約状況(予約済,仮予約,キャンセル).
+	ReservationStatus OptString `json:"reservationStatus"`
+	// 顧客情報.
+	CustomerInfo OptString `json:"customerInfo"`
+}
+
+// GetReservationNumber returns the value of ReservationNumber.
+func (s *ReservationInfo) GetReservationNumber() OptInt {
+	return s.ReservationNumber
+}
+
+// GetReservationTrainNumber returns the value of ReservationTrainNumber.
+func (s *ReservationInfo) GetReservationTrainNumber() OptInt {
+	return s.ReservationTrainNumber
+}
+
+// GetReservationSeatInfo returns the value of ReservationSeatInfo.
+func (s *ReservationInfo) GetReservationSeatInfo() OptString {
+	return s.ReservationSeatInfo
+}
+
+// GetAmount returns the value of Amount.
+func (s *ReservationInfo) GetAmount() OptInt {
+	return s.Amount
+}
+
+// GetReservationPeople returns the value of ReservationPeople.
+func (s *ReservationInfo) GetReservationPeople() OptInt {
+	return s.ReservationPeople
+}
+
+// GetReservationStatus returns the value of ReservationStatus.
+func (s *ReservationInfo) GetReservationStatus() OptString {
+	return s.ReservationStatus
+}
+
+// GetCustomerInfo returns the value of CustomerInfo.
+func (s *ReservationInfo) GetCustomerInfo() OptString {
+	return s.CustomerInfo
+}
+
+// SetReservationNumber sets the value of ReservationNumber.
+func (s *ReservationInfo) SetReservationNumber(val OptInt) {
+	s.ReservationNumber = val
+}
+
+// SetReservationTrainNumber sets the value of ReservationTrainNumber.
+func (s *ReservationInfo) SetReservationTrainNumber(val OptInt) {
+	s.ReservationTrainNumber = val
+}
+
+// SetReservationSeatInfo sets the value of ReservationSeatInfo.
+func (s *ReservationInfo) SetReservationSeatInfo(val OptString) {
+	s.ReservationSeatInfo = val
+}
+
+// SetAmount sets the value of Amount.
+func (s *ReservationInfo) SetAmount(val OptInt) {
+	s.Amount = val
+}
+
+// SetReservationPeople sets the value of ReservationPeople.
+func (s *ReservationInfo) SetReservationPeople(val OptInt) {
+	s.ReservationPeople = val
+}
+
+// SetReservationStatus sets the value of ReservationStatus.
+func (s *ReservationInfo) SetReservationStatus(val OptString) {
+	s.ReservationStatus = val
+}
+
+// SetCustomerInfo sets the value of CustomerInfo.
+func (s *ReservationInfo) SetCustomerInfo(val OptString) {
 	s.CustomerInfo = val
 }
 

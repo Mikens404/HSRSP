@@ -54,7 +54,58 @@ paths:
       responses:
         "200":
           description: 予約情報の作成に成功
-
+    get:
+      operationId: getReservationInfo
+      summary: 個別の予約情報取得
+      parameters:
+        - in: query
+          name: reservationNumber
+          schema:
+            type: integer
+          required: true
+          description: 予約番号
+      responses:
+        "200":
+          description: 列車情報の取得に成功
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/reservationInfo"
+    patch: 
+      operationId: patchReservation
+      summary: 予約情報更新
+      parameters:
+        - in: query
+          name: reservationNumber
+          schema:
+            type: integer
+          required: true
+          description: 変更する予約情報番号
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservationTrainNumber:
+                  type: integer
+                  description: 予約列車番号
+                reservationSeatInfo:
+                  type: string
+                  description: 予約席
+                reservationPeople:
+                  type: integer
+                  description: 予約人数
+                reservationStatus:
+                  type: string
+                  description: 予約状況(予約済,仮予約,キャンセル)
+                customerInfo:
+                  type: string
+                  description: 顧客情報
+        required: true
+      responses:
+        "200":
+          description: 予約情報の更新に成功
 components:
   schemas:
     trainInfo:

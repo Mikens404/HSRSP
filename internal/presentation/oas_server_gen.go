@@ -8,12 +8,24 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// GetReservationInfo implements getReservationInfo operation.
+	//
+	// 個別の予約情報取得.
+	//
+	// GET /reservation
+	GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (*ReservationInfo, error)
 	// GetTrainInfo implements getTrainInfo operation.
 	//
 	// 列車情報の取得.
 	//
 	// GET /train/{trainNumber}
 	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
+	// PatchReservation implements patchReservation operation.
+	//
+	// 予約情報更新.
+	//
+	// PATCH /reservation
+	PatchReservation(ctx context.Context, req *PatchReservationReq, params PatchReservationParams) error
 	// PostReservation implements postReservation operation.
 	//
 	// 予約情報の作成.

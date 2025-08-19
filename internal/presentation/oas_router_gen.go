@@ -72,10 +72,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				if len(elem) == 0 {
 					// Leaf node.
 					switch r.Method {
+					case "GET":
+						s.handleGetReservationInfoRequest([0]string{}, elemIsEscaped, w, r)
+					case "PATCH":
+						s.handlePatchReservationRequest([0]string{}, elemIsEscaped, w, r)
 					case "POST":
 						s.handlePostReservationRequest([0]string{}, elemIsEscaped, w, r)
 					default:
-						s.notAllowed(w, r, "POST")
+						s.notAllowed(w, r, "GET,PATCH,POST")
 					}
 
 					return
@@ -217,6 +221,22 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					// Leaf node.
 					switch method {
+					case "GET":
+						r.name = GetReservationInfoOperation
+						r.summary = "個別の予約情報取得"
+						r.operationID = "getReservationInfo"
+						r.pathPattern = "/reservation"
+						r.args = args
+						r.count = 0
+						return r, true
+					case "PATCH":
+						r.name = PatchReservationOperation
+						r.summary = "予約情報更新"
+						r.operationID = "patchReservation"
+						r.pathPattern = "/reservation"
+						r.args = args
+						r.count = 0
+						return r, true
 					case "POST":
 						r.name = PostReservationOperation
 						r.summary = "予約情報の作成"

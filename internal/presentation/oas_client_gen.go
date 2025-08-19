@@ -28,12 +28,24 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
+	// GetReservationInfo invokes getReservationInfo operation.
+	//
+	// 個別の予約情報取得.
+	//
+	// GET /reservation
+	GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (*ReservationInfo, error)
 	// GetTrainInfo invokes getTrainInfo operation.
 	//
 	// 列車情報の取得.
 	//
 	// GET /train/{trainNumber}
 	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
+	// PatchReservation invokes patchReservation operation.
+	//
+	// 予約情報更新.
+	//
+	// PATCH /reservation
+	PatchReservation(ctx context.Context, request *PatchReservationReq, params PatchReservationParams) error
 	// PostReservation invokes postReservation operation.
 	//
 	// 予約情報の作成.
@@ -83,6 +95,96 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 		return c.serverURL
 	}
 	return u
+}
+
+// GetReservationInfo invokes getReservationInfo operation.
+//
+// 個別の予約情報取得.
+//
+// GET /reservation
+func (c *Client) GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (*ReservationInfo, error) {
+	res, err := c.sendGetReservationInfo(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendGetReservationInfo(ctx context.Context, params GetReservationInfoParams) (res *ReservationInfo, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getReservationInfo"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/reservation"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, GetReservationInfoOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/reservation"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "reservationNumber" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "reservationNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.IntToString(params.ReservationNumber))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetReservationInfoResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
 }
 
 // GetTrainInfo invokes getTrainInfo operation.
@@ -168,6 +270,99 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 
 	stage = "DecodeResponse"
 	result, err := decodeGetTrainInfoResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// PatchReservation invokes patchReservation operation.
+//
+// 予約情報更新.
+//
+// PATCH /reservation
+func (c *Client) PatchReservation(ctx context.Context, request *PatchReservationReq, params PatchReservationParams) error {
+	_, err := c.sendPatchReservation(ctx, request, params)
+	return err
+}
+
+func (c *Client) sendPatchReservation(ctx context.Context, request *PatchReservationReq, params PatchReservationParams) (res *PatchReservationOK, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("patchReservation"),
+		semconv.HTTPRequestMethodKey.String("PATCH"),
+		semconv.HTTPRouteKey.String("/reservation"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, PatchReservationOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/reservation"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "reservationNumber" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "reservationNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.IntToString(params.ReservationNumber))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "PATCH", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodePatchReservationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodePatchReservationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
