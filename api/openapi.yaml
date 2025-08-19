@@ -27,20 +27,19 @@ paths:
     get:
       operationId: getReservation
       summary: 号車ごとの予約状況取得
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                trainNumber:
-                  type: integer
-                carNumber:
-                  type: integer
-              required:
-                - trainNumber
-                - carNumber
-        required: true
+      parameters:
+        - in: query
+          name: trainNumber
+          schema:
+            type: integer
+          required: true
+          description: 列車番号
+        - in: query
+          name: carNumber
+          schema:
+            type: integer
+          required: true
+          description: 号車番号
       responses:
         "200":
           description: 予約状況の取得に成功
@@ -48,14 +47,14 @@ paths:
             "application/json":
               schema:
                 type: object
-                properties:
-                  additionalProperties:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      text:
-                        type: boolean
+                description: 座席番号をキーとした予約状況のマップ
+                additionalProperties:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    text:
+                      type: boolean
                 required:
                   - reservationSeat
   /reservation:
@@ -71,8 +70,16 @@ paths:
                 reservationTrainNumber:
                   type: integer
                   description: 予約列車番号
-                reservationSeat:
+                boardingStation:
                   type: string
+                  description: 乗車駅
+                get_offStation:
+                  type: string
+                  description: 降車駅
+                reservationSeatList:
+                  type: array
+                  items:
+                    type: string
                   description: 予約席
                 reservationPeople:
                   type: integer
@@ -82,6 +89,8 @@ paths:
                   description: 顧客情報
               required:
                 - reservationTrainNumber
+                - boardingStation
+                - get_offStation
                 - reservationSeat
                 - reservationPeople
                 - customerInfo
@@ -125,15 +134,24 @@ paths:
                 reservationTrainNumber:
                   type: integer
                   description: 予約列車番号
-                reservationSeatInfo:
+                boardingStation:
                   type: string
+                  description: 乗車駅
+                get_offStation:
+                  type: string
+                  description: 降車駅
+                reservationSeatList:
+                  type: array
+                  items:
+                    type: string
                   description: 予約席
                 reservationPeople:
                   type: integer
                   description: 予約人数
                 reservationStatus:
                   type: string
-                  description: 予約状況(予約済,仮予約,キャンセル)
+                  description: 予約状況
+                  enum: [予約済, 仮予約, キャンセル]
                 customerInfo:
                   type: string
                   description: 顧客情報
@@ -147,7 +165,7 @@ components:
       type: object
       properties:
         trainNumber:
-          type: string
+          type: integer
           description: 列車番号
         timeTable:
           type: object
@@ -169,8 +187,16 @@ components:
         reservationTrainNumber:
           type: integer
           description: 予約列車番号
-        reservationSeatInfo:
+        boardingStation:
           type: string
+          description: 乗車駅
+        get_offStation:
+          type: string
+          description: 降車駅
+        reservationSeatList:
+          type: array
+          items:
+            type: string
           description: 予約席
         amount:
           type: integer
@@ -180,7 +206,8 @@ components:
           description: 予約人数
         reservationStatus:
           type: string
-          description: 予約状況(予約済,仮予約,キャンセル)
+          description: 予約状況
+          enum: [予約済, 仮予約, キャンセル]
         customerInfo:
           type: string
           description: 顧客情報

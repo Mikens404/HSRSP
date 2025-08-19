@@ -15,24 +15,19 @@ import (
 )
 
 // Encode implements json.Marshaler.
-func (s *GetReservationOK) Encode(e *jx.Encoder) {
+func (s GetReservationOK) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
-// encodeFields encodes fields.
-func (s *GetReservationOK) encodeFields(e *jx.Encoder) {
-	{
-		if s.AdditionalProperties.Set {
-			e.FieldStart("additionalProperties")
-			s.AdditionalProperties.Encode(e)
-		}
-	}
-}
+// encodeFields implements json.Marshaler.
+func (s GetReservationOK) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
 
-var jsonFieldsNameOfGetReservationOK = [1]string{
-	0: "additionalProperties",
+		elem.Encode(e)
+	}
 }
 
 // Decode decodes GetReservationOK from json.
@@ -40,22 +35,18 @@ func (s *GetReservationOK) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode GetReservationOK to nil")
 	}
-
+	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "additionalProperties":
-			if err := func() error {
-				s.AdditionalProperties.Reset()
-				if err := s.AdditionalProperties.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"additionalProperties\"")
+		var elem GetReservationOKItem
+		if err := func() error {
+			if err := elem.Decode(d); err != nil {
+				return err
 			}
-		default:
-			return d.Skip()
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
 		}
+		m[string(k)] = elem
 		return nil
 	}); err != nil {
 		return errors.Wrap(err, "decode GetReservationOK")
@@ -65,7 +56,7 @@ func (s *GetReservationOK) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *GetReservationOK) MarshalJSON() ([]byte, error) {
+func (s GetReservationOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
@@ -78,14 +69,14 @@ func (s *GetReservationOK) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *GetReservationOKAdditionalProperties) Encode(e *jx.Encoder) {
+func (s *GetReservationOKItem) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *GetReservationOKAdditionalProperties) encodeFields(e *jx.Encoder) {
+func (s *GetReservationOKItem) encodeFields(e *jx.Encoder) {
 	{
 		if s.Code.Set {
 			e.FieldStart("code")
@@ -100,15 +91,15 @@ func (s *GetReservationOKAdditionalProperties) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfGetReservationOKAdditionalProperties = [2]string{
+var jsonFieldsNameOfGetReservationOKItem = [2]string{
 	0: "code",
 	1: "text",
 }
 
-// Decode decodes GetReservationOKAdditionalProperties from json.
-func (s *GetReservationOKAdditionalProperties) Decode(d *jx.Decoder) error {
+// Decode decodes GetReservationOKItem from json.
+func (s *GetReservationOKItem) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode GetReservationOKAdditionalProperties to nil")
+		return errors.New("invalid: unable to decode GetReservationOKItem to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -138,134 +129,21 @@ func (s *GetReservationOKAdditionalProperties) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode GetReservationOKAdditionalProperties")
+		return errors.Wrap(err, "decode GetReservationOKItem")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *GetReservationOKAdditionalProperties) MarshalJSON() ([]byte, error) {
+func (s *GetReservationOKItem) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetReservationOKAdditionalProperties) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *GetReservationReq) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *GetReservationReq) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("trainNumber")
-		e.Int(s.TrainNumber)
-	}
-	{
-		e.FieldStart("carNumber")
-		e.Int(s.CarNumber)
-	}
-}
-
-var jsonFieldsNameOfGetReservationReq = [2]string{
-	0: "trainNumber",
-	1: "carNumber",
-}
-
-// Decode decodes GetReservationReq from json.
-func (s *GetReservationReq) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode GetReservationReq to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "trainNumber":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Int()
-				s.TrainNumber = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"trainNumber\"")
-			}
-		case "carNumber":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Int()
-				s.CarNumber = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"carNumber\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode GetReservationReq")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000011,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfGetReservationReq) {
-					name = jsonFieldsNameOfGetReservationReq[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *GetReservationReq) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetReservationReq) UnmarshalJSON(data []byte) error {
+func (s *GetReservationOKItem) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -340,39 +218,6 @@ func (s *OptDateTime) UnmarshalJSON(data []byte) error {
 	return s.Decode(d, json.DecodeDateTime)
 }
 
-// Encode encodes GetReservationOKAdditionalProperties as json.
-func (o OptGetReservationOKAdditionalProperties) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes GetReservationOKAdditionalProperties from json.
-func (o *OptGetReservationOKAdditionalProperties) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptGetReservationOKAdditionalProperties to nil")
-	}
-	o.Set = true
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptGetReservationOKAdditionalProperties) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptGetReservationOKAdditionalProperties) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes int as json.
 func (o OptInt) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -404,6 +249,72 @@ func (s OptInt) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptInt) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes PatchReservationReqReservationStatus as json.
+func (o OptPatchReservationReqReservationStatus) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes PatchReservationReqReservationStatus from json.
+func (o *OptPatchReservationReqReservationStatus) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptPatchReservationReqReservationStatus to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptPatchReservationReqReservationStatus) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptPatchReservationReqReservationStatus) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes ReservationInfoReservationStatus as json.
+func (o OptReservationInfoReservationStatus) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes ReservationInfoReservationStatus from json.
+func (o *OptReservationInfoReservationStatus) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptReservationInfoReservationStatus to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptReservationInfoReservationStatus) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptReservationInfoReservationStatus) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -493,9 +404,25 @@ func (s *PatchReservationReq) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.ReservationSeatInfo.Set {
-			e.FieldStart("reservationSeatInfo")
-			s.ReservationSeatInfo.Encode(e)
+		if s.BoardingStation.Set {
+			e.FieldStart("boardingStation")
+			s.BoardingStation.Encode(e)
+		}
+	}
+	{
+		if s.GetOffStation.Set {
+			e.FieldStart("get_offStation")
+			s.GetOffStation.Encode(e)
+		}
+	}
+	{
+		if s.ReservationSeatList != nil {
+			e.FieldStart("reservationSeatList")
+			e.ArrStart()
+			for _, elem := range s.ReservationSeatList {
+				e.Str(elem)
+			}
+			e.ArrEnd()
 		}
 	}
 	{
@@ -518,12 +445,14 @@ func (s *PatchReservationReq) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfPatchReservationReq = [5]string{
+var jsonFieldsNameOfPatchReservationReq = [7]string{
 	0: "reservationTrainNumber",
-	1: "reservationSeatInfo",
-	2: "reservationPeople",
-	3: "reservationStatus",
-	4: "customerInfo",
+	1: "boardingStation",
+	2: "get_offStation",
+	3: "reservationSeatList",
+	4: "reservationPeople",
+	5: "reservationStatus",
+	6: "customerInfo",
 }
 
 // Decode decodes PatchReservationReq from json.
@@ -544,15 +473,44 @@ func (s *PatchReservationReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"reservationTrainNumber\"")
 			}
-		case "reservationSeatInfo":
+		case "boardingStation":
 			if err := func() error {
-				s.ReservationSeatInfo.Reset()
-				if err := s.ReservationSeatInfo.Decode(d); err != nil {
+				s.BoardingStation.Reset()
+				if err := s.BoardingStation.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"reservationSeatInfo\"")
+				return errors.Wrap(err, "decode field \"boardingStation\"")
+			}
+		case "get_offStation":
+			if err := func() error {
+				s.GetOffStation.Reset()
+				if err := s.GetOffStation.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"get_offStation\"")
+			}
+		case "reservationSeatList":
+			if err := func() error {
+				s.ReservationSeatList = make([]string, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem string
+					v, err := d.Str()
+					elem = string(v)
+					if err != nil {
+						return err
+					}
+					s.ReservationSeatList = append(s.ReservationSeatList, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationSeatList\"")
 			}
 		case "reservationPeople":
 			if err := func() error {
@@ -608,6 +566,48 @@ func (s *PatchReservationReq) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes PatchReservationReqReservationStatus as json.
+func (s PatchReservationReqReservationStatus) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PatchReservationReqReservationStatus from json.
+func (s *PatchReservationReqReservationStatus) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PatchReservationReqReservationStatus to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch PatchReservationReqReservationStatus(v) {
+	case PatchReservationReqReservationStatus_0:
+		*s = PatchReservationReqReservationStatus_0
+	case PatchReservationReqReservationStatus_1:
+		*s = PatchReservationReqReservationStatus_1
+	case PatchReservationReqReservationStatus_2:
+		*s = PatchReservationReqReservationStatus_2
+	default:
+		*s = PatchReservationReqReservationStatus(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s PatchReservationReqReservationStatus) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PatchReservationReqReservationStatus) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode implements json.Marshaler.
 func (s *PostReservationReq) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -622,8 +622,22 @@ func (s *PostReservationReq) encodeFields(e *jx.Encoder) {
 		e.Int(s.ReservationTrainNumber)
 	}
 	{
-		e.FieldStart("reservationSeat")
-		e.Str(s.ReservationSeat)
+		e.FieldStart("boardingStation")
+		e.Str(s.BoardingStation)
+	}
+	{
+		e.FieldStart("get_offStation")
+		e.Str(s.GetOffStation)
+	}
+	{
+		if s.ReservationSeatList != nil {
+			e.FieldStart("reservationSeatList")
+			e.ArrStart()
+			for _, elem := range s.ReservationSeatList {
+				e.Str(elem)
+			}
+			e.ArrEnd()
+		}
 	}
 	{
 		e.FieldStart("reservationPeople")
@@ -635,11 +649,13 @@ func (s *PostReservationReq) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfPostReservationReq = [4]string{
+var jsonFieldsNameOfPostReservationReq = [6]string{
 	0: "reservationTrainNumber",
-	1: "reservationSeat",
-	2: "reservationPeople",
-	3: "customerInfo",
+	1: "boardingStation",
+	2: "get_offStation",
+	3: "reservationSeatList",
+	4: "reservationPeople",
+	5: "customerInfo",
 }
 
 // Decode decodes PostReservationReq from json.
@@ -663,20 +679,51 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"reservationTrainNumber\"")
 			}
-		case "reservationSeat":
+		case "boardingStation":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
 				v, err := d.Str()
-				s.ReservationSeat = string(v)
+				s.BoardingStation = string(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"reservationSeat\"")
+				return errors.Wrap(err, "decode field \"boardingStation\"")
+			}
+		case "get_offStation":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				v, err := d.Str()
+				s.GetOffStation = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"get_offStation\"")
+			}
+		case "reservationSeatList":
+			if err := func() error {
+				s.ReservationSeatList = make([]string, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem string
+					v, err := d.Str()
+					elem = string(v)
+					if err != nil {
+						return err
+					}
+					s.ReservationSeatList = append(s.ReservationSeatList, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationSeatList\"")
 			}
 		case "reservationPeople":
-			requiredBitSet[0] |= 1 << 2
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Int()
 				s.ReservationPeople = int(v)
@@ -688,7 +735,7 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reservationPeople\"")
 			}
 		case "customerInfo":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Str()
 				s.CustomerInfo = string(v)
@@ -709,7 +756,7 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00001111,
+		0b00110111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -777,9 +824,25 @@ func (s *ReservationInfo) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.ReservationSeatInfo.Set {
-			e.FieldStart("reservationSeatInfo")
-			s.ReservationSeatInfo.Encode(e)
+		if s.BoardingStation.Set {
+			e.FieldStart("boardingStation")
+			s.BoardingStation.Encode(e)
+		}
+	}
+	{
+		if s.GetOffStation.Set {
+			e.FieldStart("get_offStation")
+			s.GetOffStation.Encode(e)
+		}
+	}
+	{
+		if s.ReservationSeatList != nil {
+			e.FieldStart("reservationSeatList")
+			e.ArrStart()
+			for _, elem := range s.ReservationSeatList {
+				e.Str(elem)
+			}
+			e.ArrEnd()
 		}
 	}
 	{
@@ -808,14 +871,16 @@ func (s *ReservationInfo) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfReservationInfo = [7]string{
+var jsonFieldsNameOfReservationInfo = [9]string{
 	0: "reservationNumber",
 	1: "reservationTrainNumber",
-	2: "reservationSeatInfo",
-	3: "amount",
-	4: "reservationPeople",
-	5: "reservationStatus",
-	6: "customerInfo",
+	2: "boardingStation",
+	3: "get_offStation",
+	4: "reservationSeatList",
+	5: "amount",
+	6: "reservationPeople",
+	7: "reservationStatus",
+	8: "customerInfo",
 }
 
 // Decode decodes ReservationInfo from json.
@@ -846,15 +911,44 @@ func (s *ReservationInfo) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"reservationTrainNumber\"")
 			}
-		case "reservationSeatInfo":
+		case "boardingStation":
 			if err := func() error {
-				s.ReservationSeatInfo.Reset()
-				if err := s.ReservationSeatInfo.Decode(d); err != nil {
+				s.BoardingStation.Reset()
+				if err := s.BoardingStation.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"reservationSeatInfo\"")
+				return errors.Wrap(err, "decode field \"boardingStation\"")
+			}
+		case "get_offStation":
+			if err := func() error {
+				s.GetOffStation.Reset()
+				if err := s.GetOffStation.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"get_offStation\"")
+			}
+		case "reservationSeatList":
+			if err := func() error {
+				s.ReservationSeatList = make([]string, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem string
+					v, err := d.Str()
+					elem = string(v)
+					if err != nil {
+						return err
+					}
+					s.ReservationSeatList = append(s.ReservationSeatList, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"reservationSeatList\"")
 			}
 		case "amount":
 			if err := func() error {
@@ -916,6 +1010,48 @@ func (s *ReservationInfo) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *ReservationInfo) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes ReservationInfoReservationStatus as json.
+func (s ReservationInfoReservationStatus) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes ReservationInfoReservationStatus from json.
+func (s *ReservationInfoReservationStatus) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ReservationInfoReservationStatus to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch ReservationInfoReservationStatus(v) {
+	case ReservationInfoReservationStatus_0:
+		*s = ReservationInfoReservationStatus_0
+	case ReservationInfoReservationStatus_1:
+		*s = ReservationInfoReservationStatus_1
+	case ReservationInfoReservationStatus_2:
+		*s = ReservationInfoReservationStatus_2
+	default:
+		*s = ReservationInfoReservationStatus(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s ReservationInfoReservationStatus) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ReservationInfoReservationStatus) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

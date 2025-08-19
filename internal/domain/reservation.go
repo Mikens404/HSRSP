@@ -13,6 +13,8 @@ type Reservation struct {
 	reservationNumber      int
 	reservationTrainNumber int
 	reservationSeat        []ReservationSeat
+	boardingStation        string
+	get_offStation         string
 	amount                 int
 	reservationPeople      int
 	reservationStatus      CustomerReservationStatus
@@ -21,5 +23,5 @@ type Reservation struct {
 
 type ReservationSeat struct {
 	carNumber    int    // 何両目
-	reservations string // [席番]
+	reservations string // 席番
 }

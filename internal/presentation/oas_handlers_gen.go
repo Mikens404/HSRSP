@@ -104,38 +104,42 @@ func (s *Server) handleGetReservationRequest(args [0]string, argsEscaped bool, w
 			ID:   "getReservation",
 		}
 	)
-	request, close, err := s.decodeGetReservationRequest(r)
+	params, err := decodeGetReservationParams(args, argsEscaped, r)
 	if err != nil {
-		err = &ogenerrors.DecodeRequestError{
+		err = &ogenerrors.DecodeParamsError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		defer recordError("DecodeRequest", err)
+		defer recordError("DecodeParams", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	defer func() {
-		if err := close(); err != nil {
-			recordError("CloseRequest", err)
-		}
-	}()
 
-	var response *GetReservationOK
+	var response GetReservationOK
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
 			OperationName:    GetReservationOperation,
 			OperationSummary: "号車ごとの予約状況取得",
 			OperationID:      "getReservation",
-			Body:             request,
-			Params:           middleware.Parameters{},
-			Raw:              r,
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "trainNumber",
+					In:   "query",
+				}: params.TrainNumber,
+				{
+					Name: "carNumber",
+					In:   "query",
+				}: params.CarNumber,
+			},
+			Raw: r,
 		}
 
 		type (
-			Request  = *GetReservationReq
-			Params   = struct{}
-			Response = *GetReservationOK
+			Request  = struct{}
+			Params   = GetReservationParams
+			Response = GetReservationOK
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -144,14 +148,14 @@ func (s *Server) handleGetReservationRequest(args [0]string, argsEscaped bool, w
 		](
 			m,
 			mreq,
-			nil,
+			unpackGetReservationParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.GetReservation(ctx, request)
+				response, err = s.h.GetReservation(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.GetReservation(ctx, request)
+		response, err = s.h.GetReservation(ctx, params)
 	}
 	if err != nil {
 		defer recordError("Internal", err)

@@ -11,6 +11,109 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
+// GetReservationParams is parameters of getReservation operation.
+type GetReservationParams struct {
+	// 列車番号.
+	TrainNumber int
+	// 号車番号.
+	CarNumber int
+}
+
+func unpackGetReservationParams(packed middleware.Parameters) (params GetReservationParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "trainNumber",
+			In:   "query",
+		}
+		params.TrainNumber = packed[key].(int)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "carNumber",
+			In:   "query",
+		}
+		params.CarNumber = packed[key].(int)
+	}
+	return params
+}
+
+func decodeGetReservationParams(args [0]string, argsEscaped bool, r *http.Request) (params GetReservationParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: trainNumber.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "trainNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.TrainNumber = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "trainNumber",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: carNumber.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "carNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.CarNumber = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "carNumber",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // GetReservationInfoParams is parameters of getReservationInfo operation.
 type GetReservationInfoParams struct {
 	// 予約番号.

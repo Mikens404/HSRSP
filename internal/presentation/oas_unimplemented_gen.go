@@ -18,7 +18,7 @@ var _ Handler = UnimplementedHandler{}
 // 号車ごとの予約状況取得.
 //
 // GET /reservationSeat
-func (UnimplementedHandler) GetReservation(ctx context.Context, req *GetReservationReq) (r *GetReservationOK, _ error) {
+func (UnimplementedHandler) GetReservation(ctx context.Context, params GetReservationParams) (r GetReservationOK, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

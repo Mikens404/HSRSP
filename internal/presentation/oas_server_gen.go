@@ -13,7 +13,7 @@ type Handler interface {
 	// 号車ごとの予約状況取得.
 	//
 	// GET /reservationSeat
-	GetReservation(ctx context.Context, req *GetReservationReq) (*GetReservationOK, error)
+	GetReservation(ctx context.Context, params GetReservationParams) (GetReservationOK, error)
 	// GetReservationInfo implements getReservationInfo operation.
 	//
 	// 個別の予約情報取得.

@@ -33,7 +33,7 @@ type Invoker interface {
 	// 号車ごとの予約状況取得.
 	//
 	// GET /reservationSeat
-	GetReservation(ctx context.Context, request *GetReservationReq) (*GetReservationOK, error)
+	GetReservation(ctx context.Context, params GetReservationParams) (GetReservationOK, error)
 	// GetReservationInfo invokes getReservationInfo operation.
 	//
 	// 個別の予約情報取得.
@@ -108,12 +108,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // 号車ごとの予約状況取得.
 //
 // GET /reservationSeat
-func (c *Client) GetReservation(ctx context.Context, request *GetReservationReq) (*GetReservationOK, error) {
-	res, err := c.sendGetReservation(ctx, request)
+func (c *Client) GetReservation(ctx context.Context, params GetReservationParams) (GetReservationOK, error) {
+	res, err := c.sendGetReservation(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendGetReservation(ctx context.Context, request *GetReservationReq) (res *GetReservationOK, err error) {
+func (c *Client) sendGetReservation(ctx context.Context, params GetReservationParams) (res GetReservationOK, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getReservation"),
 		semconv.HTTPRequestMethodKey.String("GET"),
@@ -153,13 +153,42 @@ func (c *Client) sendGetReservation(ctx context.Context, request *GetReservation
 	pathParts[0] = "/reservationSeat"
 	uri.AddPathParts(u, pathParts[:]...)
 
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "trainNumber" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "trainNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.IntToString(params.TrainNumber))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "carNumber" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "carNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.IntToString(params.CarNumber))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "GET", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeGetReservationRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"

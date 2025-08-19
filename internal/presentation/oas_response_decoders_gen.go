@@ -14,7 +14,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeGetReservationResponse(resp *http.Response) (res *GetReservationOK, _ error) {
+func decodeGetReservationResponse(resp *http.Response) (res GetReservationOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -47,7 +47,7 @@ func decodeGetReservationResponse(resp *http.Response) (res *GetReservationOK, _
 				}
 				return res, err
 			}
-			return &response, nil
+			return response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
 		}
@@ -87,6 +87,15 @@ func decodeGetReservationInfoResponse(resp *http.Response) (res *ReservationInfo
 					Err:         err,
 				}
 				return res, err
+			}
+			// Validate response.
+			if err := func() error {
+				if err := response.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return res, errors.Wrap(err, "validate")
 			}
 			return &response, nil
 		default:
