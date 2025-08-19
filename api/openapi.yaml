@@ -5,12 +5,12 @@ info:
 
 
 paths:
-  /train/{trainNumber}:
+  /train:
     get:
       operationId: getTrainInfo
       summary: 列車情報の取得
       parameters:
-        - in: path
+        - in: query
           name: trainNumber
           schema:
             type: integer
@@ -23,6 +23,41 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/trainInfo"
+  /reservationSeat:
+    get:
+      operationId: getReservation
+      summary: 号車ごとの予約状況取得
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trainNumber:
+                  type: integer
+                carNumber:
+                  type: integer
+              required:
+                - trainNumber
+                - carNumber
+        required: true
+      responses:
+        "200":
+          description: 予約状況の取得に成功
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  additionalProperties:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      text:
+                        type: boolean
+                required:
+                  - reservationSeat
   /reservation:
     post:
       operationId: postReservation

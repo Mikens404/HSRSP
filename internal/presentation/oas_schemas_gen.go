@@ -6,6 +6,116 @@ import (
 	"time"
 )
 
+type GetReservationOK struct {
+	AdditionalProperties OptGetReservationOKAdditionalProperties `json:"additionalProperties"`
+}
+
+// GetAdditionalProperties returns the value of AdditionalProperties.
+func (s *GetReservationOK) GetAdditionalProperties() OptGetReservationOKAdditionalProperties {
+	return s.AdditionalProperties
+}
+
+// SetAdditionalProperties sets the value of AdditionalProperties.
+func (s *GetReservationOK) SetAdditionalProperties(val OptGetReservationOKAdditionalProperties) {
+	s.AdditionalProperties = val
+}
+
+type GetReservationOKAdditionalProperties struct {
+	Code OptString `json:"code"`
+	Text OptBool   `json:"text"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetReservationOKAdditionalProperties) GetCode() OptString {
+	return s.Code
+}
+
+// GetText returns the value of Text.
+func (s *GetReservationOKAdditionalProperties) GetText() OptBool {
+	return s.Text
+}
+
+// SetCode sets the value of Code.
+func (s *GetReservationOKAdditionalProperties) SetCode(val OptString) {
+	s.Code = val
+}
+
+// SetText sets the value of Text.
+func (s *GetReservationOKAdditionalProperties) SetText(val OptBool) {
+	s.Text = val
+}
+
+type GetReservationReq struct {
+	TrainNumber int `json:"trainNumber"`
+	CarNumber   int `json:"carNumber"`
+}
+
+// GetTrainNumber returns the value of TrainNumber.
+func (s *GetReservationReq) GetTrainNumber() int {
+	return s.TrainNumber
+}
+
+// GetCarNumber returns the value of CarNumber.
+func (s *GetReservationReq) GetCarNumber() int {
+	return s.CarNumber
+}
+
+// SetTrainNumber sets the value of TrainNumber.
+func (s *GetReservationReq) SetTrainNumber(val int) {
+	s.TrainNumber = val
+}
+
+// SetCarNumber sets the value of CarNumber.
+func (s *GetReservationReq) SetCarNumber(val int) {
+	s.CarNumber = val
+}
+
+// NewOptBool returns new OptBool with value set to v.
+func NewOptBool(v bool) OptBool {
+	return OptBool{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptBool is optional bool.
+type OptBool struct {
+	Value bool
+	Set   bool
+}
+
+// IsSet returns true if OptBool was set.
+func (o OptBool) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptBool) Reset() {
+	var v bool
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptBool) SetTo(v bool) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptBool) Get() (v bool, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptBool) Or(d bool) bool {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptDateTime returns new OptDateTime with value set to v.
 func NewOptDateTime(v time.Time) OptDateTime {
 	return OptDateTime{
@@ -46,6 +156,52 @@ func (o OptDateTime) Get() (v time.Time, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptDateTime) Or(d time.Time) time.Time {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptGetReservationOKAdditionalProperties returns new OptGetReservationOKAdditionalProperties with value set to v.
+func NewOptGetReservationOKAdditionalProperties(v GetReservationOKAdditionalProperties) OptGetReservationOKAdditionalProperties {
+	return OptGetReservationOKAdditionalProperties{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptGetReservationOKAdditionalProperties is optional GetReservationOKAdditionalProperties.
+type OptGetReservationOKAdditionalProperties struct {
+	Value GetReservationOKAdditionalProperties
+	Set   bool
+}
+
+// IsSet returns true if OptGetReservationOKAdditionalProperties was set.
+func (o OptGetReservationOKAdditionalProperties) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptGetReservationOKAdditionalProperties) Reset() {
+	var v GetReservationOKAdditionalProperties
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptGetReservationOKAdditionalProperties) SetTo(v GetReservationOKAdditionalProperties) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptGetReservationOKAdditionalProperties) Get() (v GetReservationOKAdditionalProperties, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptGetReservationOKAdditionalProperties) Or(d GetReservationOKAdditionalProperties) GetReservationOKAdditionalProperties {
 	if v, ok := o.Get(); ok {
 		return v
 	}

@@ -4,15 +4,11 @@ package api
 
 import (
 	"net/http"
-	"net/url"
-
-	"github.com/go-faster/errors"
 
 	"github.com/ogen-go/ogen/conv"
 	"github.com/ogen-go/ogen/middleware"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/uri"
-	"github.com/ogen-go/ogen/validate"
 )
 
 // GetReservationInfoParams is parameters of getReservationInfo operation.
@@ -83,33 +79,25 @@ func unpackGetTrainInfoParams(packed middleware.Parameters) (params GetTrainInfo
 	{
 		key := middleware.ParameterKey{
 			Name: "trainNumber",
-			In:   "path",
+			In:   "query",
 		}
 		params.TrainNumber = packed[key].(int)
 	}
 	return params
 }
 
-func decodeGetTrainInfoParams(args [1]string, argsEscaped bool, r *http.Request) (params GetTrainInfoParams, _ error) {
-	// Decode path: trainNumber.
+func decodeGetTrainInfoParams(args [0]string, argsEscaped bool, r *http.Request) (params GetTrainInfoParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: trainNumber.
 	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "trainNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
 		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "trainNumber",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
 
-			if err := func() error {
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
 				val, err := d.DecodeValue()
 				if err != nil {
 					return err
@@ -122,17 +110,17 @@ func decodeGetTrainInfoParams(args [1]string, argsEscaped bool, r *http.Request)
 
 				params.TrainNumber = c
 				return nil
-			}(); err != nil {
+			}); err != nil {
 				return err
 			}
 		} else {
-			return validate.ErrFieldRequired
+			return err
 		}
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "trainNumber",
-			In:   "path",
+			In:   "query",
 			Err:  err,
 		}
 	}

@@ -28,6 +28,12 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
+	// GetReservation invokes getReservation operation.
+	//
+	// 号車ごとの予約状況取得.
+	//
+	// GET /reservationSeat
+	GetReservation(ctx context.Context, request *GetReservationReq) (*GetReservationOK, error)
 	// GetReservationInfo invokes getReservationInfo operation.
 	//
 	// 個別の予約情報取得.
@@ -38,7 +44,7 @@ type Invoker interface {
 	//
 	// 列車情報の取得.
 	//
-	// GET /train/{trainNumber}
+	// GET /train
 	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
 	// PatchReservation invokes patchReservation operation.
 	//
@@ -95,6 +101,81 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 		return c.serverURL
 	}
 	return u
+}
+
+// GetReservation invokes getReservation operation.
+//
+// 号車ごとの予約状況取得.
+//
+// GET /reservationSeat
+func (c *Client) GetReservation(ctx context.Context, request *GetReservationReq) (*GetReservationOK, error) {
+	res, err := c.sendGetReservation(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendGetReservation(ctx context.Context, request *GetReservationReq) (res *GetReservationOK, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getReservation"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/reservationSeat"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, GetReservationOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/reservationSeat"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetReservationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetReservationResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
 }
 
 // GetReservationInfo invokes getReservationInfo operation.
@@ -191,7 +272,7 @@ func (c *Client) sendGetReservationInfo(ctx context.Context, params GetReservati
 //
 // 列車情報の取得.
 //
-// GET /train/{trainNumber}
+// GET /train
 func (c *Client) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error) {
 	res, err := c.sendGetTrainInfo(ctx, params)
 	return res, err
@@ -201,7 +282,7 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getTrainInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/train/{trainNumber}"),
+		semconv.HTTPRouteKey.String("/train"),
 	}
 
 	// Run stopwatch.
@@ -233,27 +314,27 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/train/"
+	var pathParts [1]string
+	pathParts[0] = "/train"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
 	{
 		// Encode "trainNumber" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "trainNumber",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "trainNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
 			return e.EncodeValue(conv.IntToString(params.TrainNumber))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
 		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
 	}
-	uri.AddPathParts(u, pathParts[:]...)
+	u.RawQuery = q.Values().Encode()
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "GET", u)
