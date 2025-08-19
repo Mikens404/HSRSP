@@ -14,7 +14,7 @@ type Reservation struct {
 	reservationTrainNumber int
 	reservationSeat        []ReservationSeat
 	boardingStation        string
-	get_offStation         string
+        getOffStation          string
 	amount                 int
 	reservationPeople      int
 	reservationStatus      CustomerReservationStatus
