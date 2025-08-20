@@ -48,16 +48,14 @@ paths:
               schema:
                 type: object
                 description: 座席番号をキーとした予約状況のマップ
-                additionalProperties:
-                  type: object
-                  properties:
-                    seatNumber:
-                      type: string
-                    status:
-                      type: boolean
-                  required:
-                    - seatNumber
-                    - status
+                properties:
+                  seatNumber:
+                    type: string
+                  status:
+                    type: boolean
+                required:
+                  - seatNumber
+                  - status
   /reservation:
     post:
       operationId: postReservation

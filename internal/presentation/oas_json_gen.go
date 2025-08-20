@@ -15,68 +15,14 @@ import (
 )
 
 // Encode implements json.Marshaler.
-func (s GetReservationSeatOK) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields implements json.Marshaler.
-func (s GetReservationSeatOK) encodeFields(e *jx.Encoder) {
-	for k, elem := range s {
-		e.FieldStart(k)
-
-		elem.Encode(e)
-	}
-}
-
-// Decode decodes GetReservationSeatOK from json.
-func (s *GetReservationSeatOK) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode GetReservationSeatOK to nil")
-	}
-	m := s.init()
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem GetReservationSeatOKItem
-		if err := func() error {
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			return nil
-		}(); err != nil {
-			return errors.Wrapf(err, "decode field %q", k)
-		}
-		m[string(k)] = elem
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode GetReservationSeatOK")
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s GetReservationSeatOK) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetReservationSeatOK) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *GetReservationSeatOKItem) Encode(e *jx.Encoder) {
+func (s *GetReservationSeatOK) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *GetReservationSeatOKItem) encodeFields(e *jx.Encoder) {
+func (s *GetReservationSeatOK) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("seatNumber")
 		e.Str(s.SeatNumber)
@@ -87,15 +33,15 @@ func (s *GetReservationSeatOKItem) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfGetReservationSeatOKItem = [2]string{
+var jsonFieldsNameOfGetReservationSeatOK = [2]string{
 	0: "seatNumber",
 	1: "status",
 }
 
-// Decode decodes GetReservationSeatOKItem from json.
-func (s *GetReservationSeatOKItem) Decode(d *jx.Decoder) error {
+// Decode decodes GetReservationSeatOK from json.
+func (s *GetReservationSeatOK) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode GetReservationSeatOKItem to nil")
+		return errors.New("invalid: unable to decode GetReservationSeatOK to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -130,7 +76,7 @@ func (s *GetReservationSeatOKItem) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode GetReservationSeatOKItem")
+		return errors.Wrap(err, "decode GetReservationSeatOK")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -147,8 +93,8 @@ func (s *GetReservationSeatOKItem) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfGetReservationSeatOKItem) {
-					name = jsonFieldsNameOfGetReservationSeatOKItem[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfGetReservationSeatOK) {
+					name = jsonFieldsNameOfGetReservationSeatOK[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -169,14 +115,14 @@ func (s *GetReservationSeatOKItem) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *GetReservationSeatOKItem) MarshalJSON() ([]byte, error) {
+func (s *GetReservationSeatOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetReservationSeatOKItem) UnmarshalJSON(data []byte) error {
+func (s *GetReservationSeatOK) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

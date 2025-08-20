@@ -9,39 +9,28 @@ import (
 )
 
 // 座席番号をキーとした予約状況のマップ.
-type GetReservationSeatOK map[string]GetReservationSeatOKItem
-
-func (s *GetReservationSeatOK) init() GetReservationSeatOK {
-	m := *s
-	if m == nil {
-		m = map[string]GetReservationSeatOKItem{}
-		*s = m
-	}
-	return m
-}
-
-type GetReservationSeatOKItem struct {
+type GetReservationSeatOK struct {
 	SeatNumber string `json:"seatNumber"`
 	Status     bool   `json:"status"`
 }
 
 // GetSeatNumber returns the value of SeatNumber.
-func (s *GetReservationSeatOKItem) GetSeatNumber() string {
+func (s *GetReservationSeatOK) GetSeatNumber() string {
 	return s.SeatNumber
 }
 
 // GetStatus returns the value of Status.
-func (s *GetReservationSeatOKItem) GetStatus() bool {
+func (s *GetReservationSeatOK) GetStatus() bool {
 	return s.Status
 }
 
 // SetSeatNumber sets the value of SeatNumber.
-func (s *GetReservationSeatOKItem) SetSeatNumber(val string) {
+func (s *GetReservationSeatOK) SetSeatNumber(val string) {
 	s.SeatNumber = val
 }
 
 // SetStatus sets the value of Status.
-func (s *GetReservationSeatOKItem) SetStatus(val bool) {
+func (s *GetReservationSeatOK) SetStatus(val bool) {
 	s.Status = val
 }
 
