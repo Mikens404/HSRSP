@@ -15,14 +15,14 @@ import (
 )
 
 // Encode implements json.Marshaler.
-func (s GetReservationOK) Encode(e *jx.Encoder) {
+func (s GetReservationSeatOK) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields implements json.Marshaler.
-func (s GetReservationOK) encodeFields(e *jx.Encoder) {
+func (s GetReservationSeatOK) encodeFields(e *jx.Encoder) {
 	for k, elem := range s {
 		e.FieldStart(k)
 
@@ -30,14 +30,14 @@ func (s GetReservationOK) encodeFields(e *jx.Encoder) {
 	}
 }
 
-// Decode decodes GetReservationOK from json.
-func (s *GetReservationOK) Decode(d *jx.Decoder) error {
+// Decode decodes GetReservationSeatOK from json.
+func (s *GetReservationSeatOK) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode GetReservationOK to nil")
+		return errors.New("invalid: unable to decode GetReservationSeatOK to nil")
 	}
 	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem GetReservationOKItem
+		var elem GetReservationSeatOKItem
 		if err := func() error {
 			if err := elem.Decode(d); err != nil {
 				return err
@@ -49,65 +49,64 @@ func (s *GetReservationOK) Decode(d *jx.Decoder) error {
 		m[string(k)] = elem
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode GetReservationOK")
+		return errors.Wrap(err, "decode GetReservationSeatOK")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s GetReservationOK) MarshalJSON() ([]byte, error) {
+func (s GetReservationSeatOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetReservationOK) UnmarshalJSON(data []byte) error {
+func (s *GetReservationSeatOK) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *GetReservationOKItem) Encode(e *jx.Encoder) {
+func (s *GetReservationSeatOKItem) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *GetReservationOKItem) encodeFields(e *jx.Encoder) {
+func (s *GetReservationSeatOKItem) encodeFields(e *jx.Encoder) {
 	{
-		if s.SeatNumber.Set {
-			e.FieldStart("seatNumber")
-			s.SeatNumber.Encode(e)
-		}
+		e.FieldStart("seatNumber")
+		e.Str(s.SeatNumber)
 	}
 	{
-		if s.Status.Set {
-			e.FieldStart("status")
-			s.Status.Encode(e)
-		}
+		e.FieldStart("status")
+		e.Bool(s.Status)
 	}
 }
 
-var jsonFieldsNameOfGetReservationOKItem = [2]string{
+var jsonFieldsNameOfGetReservationSeatOKItem = [2]string{
 	0: "seatNumber",
 	1: "status",
 }
 
-// Decode decodes GetReservationOKItem from json.
-func (s *GetReservationOKItem) Decode(d *jx.Decoder) error {
+// Decode decodes GetReservationSeatOKItem from json.
+func (s *GetReservationSeatOKItem) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode GetReservationOKItem to nil")
+		return errors.New("invalid: unable to decode GetReservationSeatOKItem to nil")
 	}
+	var requiredBitSet [1]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "seatNumber":
+			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				s.SeatNumber.Reset()
-				if err := s.SeatNumber.Decode(d); err != nil {
+				v, err := d.Str()
+				s.SeatNumber = string(v)
+				if err != nil {
 					return err
 				}
 				return nil
@@ -115,9 +114,11 @@ func (s *GetReservationOKItem) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"seatNumber\"")
 			}
 		case "status":
+			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				s.Status.Reset()
-				if err := s.Status.Decode(d); err != nil {
+				v, err := d.Bool()
+				s.Status = bool(v)
+				if err != nil {
 					return err
 				}
 				return nil
@@ -129,56 +130,53 @@ func (s *GetReservationOKItem) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode GetReservationOKItem")
+		return errors.Wrap(err, "decode GetReservationSeatOKItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfGetReservationSeatOKItem) {
+					name = jsonFieldsNameOfGetReservationSeatOKItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *GetReservationOKItem) MarshalJSON() ([]byte, error) {
+func (s *GetReservationSeatOKItem) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *GetReservationOKItem) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes bool as json.
-func (o OptBool) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	e.Bool(bool(o.Value))
-}
-
-// Decode decodes bool from json.
-func (o *OptBool) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptBool to nil")
-	}
-	o.Set = true
-	v, err := d.Bool()
-	if err != nil {
-		return err
-	}
-	o.Value = bool(v)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptBool) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptBool) UnmarshalJSON(data []byte) error {
+func (s *GetReservationSeatOKItem) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -350,40 +348,6 @@ func (s OptString) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptString) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes TrainInfoTimeTable as json.
-func (o OptTrainInfoTimeTable) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes TrainInfoTimeTable from json.
-func (o *OptTrainInfoTimeTable) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptTrainInfoTimeTable to nil")
-	}
-	o.Set = true
-	o.Value = make(TrainInfoTimeTable)
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptTrainInfoTimeTable) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptTrainInfoTimeTable) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -1071,9 +1035,13 @@ func (s *TrainInfo) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.TimeTable.Set {
+		if s.TimeTable != nil {
 			e.FieldStart("timeTable")
-			s.TimeTable.Encode(e)
+			e.ArrStart()
+			for _, elem := range s.TimeTable {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
 		}
 	}
 }
@@ -1103,8 +1071,15 @@ func (s *TrainInfo) Decode(d *jx.Decoder) error {
 			}
 		case "timeTable":
 			if err := func() error {
-				s.TimeTable.Reset()
-				if err := s.TimeTable.Decode(d); err != nil {
+				s.TimeTable = make([]TrainInfoTimeTableItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem TrainInfoTimeTableItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.TimeTable = append(s.TimeTable, elem)
+					return nil
+				}); err != nil {
 					return err
 				}
 				return nil
@@ -1131,60 +1106,6 @@ func (s *TrainInfo) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *TrainInfo) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s TrainInfoTimeTable) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields implements json.Marshaler.
-func (s TrainInfoTimeTable) encodeFields(e *jx.Encoder) {
-	for k, elem := range s {
-		e.FieldStart(k)
-
-		elem.Encode(e)
-	}
-}
-
-// Decode decodes TrainInfoTimeTable from json.
-func (s *TrainInfoTimeTable) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode TrainInfoTimeTable to nil")
-	}
-	m := s.init()
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem TrainInfoTimeTableItem
-		if err := func() error {
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			return nil
-		}(); err != nil {
-			return errors.Wrapf(err, "decode field %q", k)
-		}
-		m[string(k)] = elem
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode TrainInfoTimeTable")
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s TrainInfoTimeTable) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *TrainInfoTimeTable) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

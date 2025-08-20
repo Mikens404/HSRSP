@@ -25,7 +25,7 @@ paths:
                 $ref: "#/components/schemas/trainInfo"
   /reservationSeat:
     get:
-      operationId: getReservation
+      operationId: getReservationSeat
       summary: 号車ごとの予約状況取得
       parameters:
         - in: query
@@ -55,6 +55,9 @@ paths:
                       type: string
                     status:
                       type: boolean
+                  required:
+                    - seatNumber
+                    - status
   /reservation:
     post:
       operationId: postReservation
@@ -166,9 +169,9 @@ components:
           type: integer
           description: 列車番号
         timeTable:
-          type: object
+          type: array
           description: 時刻表
-          additionalProperties:
+          items:
             type: object
             properties:
               station:

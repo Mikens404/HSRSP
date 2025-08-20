@@ -95,7 +95,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "GET":
-							s.handleGetReservationRequest([0]string{}, elemIsEscaped, w, r)
+							s.handleGetReservationSeatRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "GET")
 						}
@@ -270,9 +270,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						// Leaf node.
 						switch method {
 						case "GET":
-							r.name = GetReservationOperation
+							r.name = GetReservationSeatOperation
 							r.summary = "号車ごとの予約状況取得"
-							r.operationID = "getReservation"
+							r.operationID = "getReservationSeat"
 							r.pathPattern = "/reservationSeat"
 							r.args = args
 							r.count = 0

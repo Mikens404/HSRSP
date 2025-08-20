@@ -12,15 +12,9 @@ const (
 )
 
 type Train struct {
-	trainNumber           int
-	timeTable             TimeTable
-	trainType             TrainType
-	seatReservationStatus []SeatReservationStatus
-}
-
-type SeatReservationStatus struct {
-	carNumber    int             // 何両目
-	reservations map[string]bool // [席番]
+	TrainNumber int
+	TimeTable   TimeTable
+	TrainType   TrainType
 }
 
 type TimeTable []StopStationList

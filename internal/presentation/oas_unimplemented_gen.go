@@ -13,21 +13,21 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// GetReservation implements getReservation operation.
-//
-// 号車ごとの予約状況取得.
-//
-// GET /reservationSeat
-func (UnimplementedHandler) GetReservation(ctx context.Context, params GetReservationParams) (r GetReservationOK, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
 // GetReservationInfo implements getReservationInfo operation.
 //
 // 個別の予約情報取得.
 //
 // GET /reservation
 func (UnimplementedHandler) GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (r *ReservationInfo, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetReservationSeat implements getReservationSeat operation.
+//
+// 号車ごとの予約状況取得.
+//
+// GET /reservationSeat
+func (UnimplementedHandler) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (r GetReservationSeatOK, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

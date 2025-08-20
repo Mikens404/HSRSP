@@ -9,86 +9,40 @@ import (
 )
 
 // 座席番号をキーとした予約状況のマップ.
-type GetReservationOK map[string]GetReservationOKItem
+type GetReservationSeatOK map[string]GetReservationSeatOKItem
 
-func (s *GetReservationOK) init() GetReservationOK {
+func (s *GetReservationSeatOK) init() GetReservationSeatOK {
 	m := *s
 	if m == nil {
-		m = map[string]GetReservationOKItem{}
+		m = map[string]GetReservationSeatOKItem{}
 		*s = m
 	}
 	return m
 }
 
-type GetReservationOKItem struct {
-	SeatNumber OptString `json:"seatNumber"`
-	Status     OptBool   `json:"status"`
+type GetReservationSeatOKItem struct {
+	SeatNumber string `json:"seatNumber"`
+	Status     bool   `json:"status"`
 }
 
 // GetSeatNumber returns the value of SeatNumber.
-func (s *GetReservationOKItem) GetSeatNumber() OptString {
+func (s *GetReservationSeatOKItem) GetSeatNumber() string {
 	return s.SeatNumber
 }
 
 // GetStatus returns the value of Status.
-func (s *GetReservationOKItem) GetStatus() OptBool {
+func (s *GetReservationSeatOKItem) GetStatus() bool {
 	return s.Status
 }
 
 // SetSeatNumber sets the value of SeatNumber.
-func (s *GetReservationOKItem) SetSeatNumber(val OptString) {
+func (s *GetReservationSeatOKItem) SetSeatNumber(val string) {
 	s.SeatNumber = val
 }
 
 // SetStatus sets the value of Status.
-func (s *GetReservationOKItem) SetStatus(val OptBool) {
+func (s *GetReservationSeatOKItem) SetStatus(val bool) {
 	s.Status = val
-}
-
-// NewOptBool returns new OptBool with value set to v.
-func NewOptBool(v bool) OptBool {
-	return OptBool{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptBool is optional bool.
-type OptBool struct {
-	Value bool
-	Set   bool
-}
-
-// IsSet returns true if OptBool was set.
-func (o OptBool) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptBool) Reset() {
-	var v bool
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptBool) SetTo(v bool) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptBool) Get() (v bool, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptBool) Or(d bool) bool {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
 }
 
 // NewOptDateTime returns new OptDateTime with value set to v.
@@ -315,52 +269,6 @@ func (o OptString) Get() (v string, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptString) Or(d string) string {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptTrainInfoTimeTable returns new OptTrainInfoTimeTable with value set to v.
-func NewOptTrainInfoTimeTable(v TrainInfoTimeTable) OptTrainInfoTimeTable {
-	return OptTrainInfoTimeTable{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptTrainInfoTimeTable is optional TrainInfoTimeTable.
-type OptTrainInfoTimeTable struct {
-	Value TrainInfoTimeTable
-	Set   bool
-}
-
-// IsSet returns true if OptTrainInfoTimeTable was set.
-func (o OptTrainInfoTimeTable) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptTrainInfoTimeTable) Reset() {
-	var v TrainInfoTimeTable
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptTrainInfoTimeTable) SetTo(v TrainInfoTimeTable) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptTrainInfoTimeTable) Get() (v TrainInfoTimeTable, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptTrainInfoTimeTable) Or(d TrainInfoTimeTable) TrainInfoTimeTable {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -750,7 +658,7 @@ type TrainInfo struct {
 	// 列車番号.
 	TrainNumber OptInt `json:"trainNumber"`
 	// 時刻表.
-	TimeTable OptTrainInfoTimeTable `json:"timeTable"`
+	TimeTable []TrainInfoTimeTableItem `json:"timeTable"`
 }
 
 // GetTrainNumber returns the value of TrainNumber.
@@ -759,7 +667,7 @@ func (s *TrainInfo) GetTrainNumber() OptInt {
 }
 
 // GetTimeTable returns the value of TimeTable.
-func (s *TrainInfo) GetTimeTable() OptTrainInfoTimeTable {
+func (s *TrainInfo) GetTimeTable() []TrainInfoTimeTableItem {
 	return s.TimeTable
 }
 
@@ -769,20 +677,8 @@ func (s *TrainInfo) SetTrainNumber(val OptInt) {
 }
 
 // SetTimeTable sets the value of TimeTable.
-func (s *TrainInfo) SetTimeTable(val OptTrainInfoTimeTable) {
+func (s *TrainInfo) SetTimeTable(val []TrainInfoTimeTableItem) {
 	s.TimeTable = val
-}
-
-// 時刻表.
-type TrainInfoTimeTable map[string]TrainInfoTimeTableItem
-
-func (s *TrainInfoTimeTable) init() TrainInfoTimeTable {
-	m := *s
-	if m == nil {
-		m = map[string]TrainInfoTimeTableItem{}
-		*s = m
-	}
-	return m
 }
 
 type TrainInfoTimeTableItem struct {

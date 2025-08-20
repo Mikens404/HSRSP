@@ -11,15 +11,73 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
-// GetReservationParams is parameters of getReservation operation.
-type GetReservationParams struct {
+// GetReservationInfoParams is parameters of getReservationInfo operation.
+type GetReservationInfoParams struct {
+	// 予約番号.
+	ReservationNumber int
+}
+
+func unpackGetReservationInfoParams(packed middleware.Parameters) (params GetReservationInfoParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "reservationNumber",
+			In:   "query",
+		}
+		params.ReservationNumber = packed[key].(int)
+	}
+	return params
+}
+
+func decodeGetReservationInfoParams(args [0]string, argsEscaped bool, r *http.Request) (params GetReservationInfoParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: reservationNumber.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "reservationNumber",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.ReservationNumber = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "reservationNumber",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetReservationSeatParams is parameters of getReservationSeat operation.
+type GetReservationSeatParams struct {
 	// 列車番号.
 	TrainNumber int
 	// 号車番号.
 	CarNumber int
 }
 
-func unpackGetReservationParams(packed middleware.Parameters) (params GetReservationParams) {
+func unpackGetReservationSeatParams(packed middleware.Parameters) (params GetReservationSeatParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "trainNumber",
@@ -37,7 +95,7 @@ func unpackGetReservationParams(packed middleware.Parameters) (params GetReserva
 	return params
 }
 
-func decodeGetReservationParams(args [0]string, argsEscaped bool, r *http.Request) (params GetReservationParams, _ error) {
+func decodeGetReservationSeatParams(args [0]string, argsEscaped bool, r *http.Request) (params GetReservationSeatParams, _ error) {
 	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode query: trainNumber.
 	if err := func() error {
@@ -107,64 +165,6 @@ func decodeGetReservationParams(args [0]string, argsEscaped bool, r *http.Reques
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "carNumber",
-			In:   "query",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// GetReservationInfoParams is parameters of getReservationInfo operation.
-type GetReservationInfoParams struct {
-	// 予約番号.
-	ReservationNumber int
-}
-
-func unpackGetReservationInfoParams(packed middleware.Parameters) (params GetReservationInfoParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "reservationNumber",
-			In:   "query",
-		}
-		params.ReservationNumber = packed[key].(int)
-	}
-	return params
-}
-
-func decodeGetReservationInfoParams(args [0]string, argsEscaped bool, r *http.Request) (params GetReservationInfoParams, _ error) {
-	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode query: reservationNumber.
-	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "reservationNumber",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToInt(val)
-				if err != nil {
-					return err
-				}
-
-				params.ReservationNumber = c
-				return nil
-			}); err != nil {
-				return err
-			}
-		} else {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "reservationNumber",
 			In:   "query",
 			Err:  err,
 		}
