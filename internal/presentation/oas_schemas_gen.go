@@ -259,9 +259,8 @@ type PatchReservationReq struct {
 	// 乗車駅.
 	BoardingStation OptString `json:"boardingStation"`
 	// 降車駅.
-	GetOffStation OptString `json:"getOffStation"`
-	// 予約席.
-	ReservationSeatList []string `json:"reservationSeatList"`
+	GetOffStation       OptString                                    `json:"getOffStation"`
+	ReservationSeatList []PatchReservationReqReservationSeatListItem `json:"reservationSeatList"`
 	// 予約人数.
 	ReservationPeople OptInt `json:"reservationPeople"`
 	// 予約状況.
@@ -286,7 +285,7 @@ func (s *PatchReservationReq) GetGetOffStation() OptString {
 }
 
 // GetReservationSeatList returns the value of ReservationSeatList.
-func (s *PatchReservationReq) GetReservationSeatList() []string {
+func (s *PatchReservationReq) GetReservationSeatList() []PatchReservationReqReservationSeatListItem {
 	return s.ReservationSeatList
 }
 
@@ -321,7 +320,7 @@ func (s *PatchReservationReq) SetGetOffStation(val OptString) {
 }
 
 // SetReservationSeatList sets the value of ReservationSeatList.
-func (s *PatchReservationReq) SetReservationSeatList(val []string) {
+func (s *PatchReservationReq) SetReservationSeatList(val []PatchReservationReqReservationSeatListItem) {
 	s.ReservationSeatList = val
 }
 
@@ -338,6 +337,33 @@ func (s *PatchReservationReq) SetReservationStatus(val OptPatchReservationReqRes
 // SetCustomerInfo sets the value of CustomerInfo.
 func (s *PatchReservationReq) SetCustomerInfo(val OptString) {
 	s.CustomerInfo = val
+}
+
+type PatchReservationReqReservationSeatListItem struct {
+	// 号車番号.
+	CarNumber int `json:"carNumber"`
+	// 座席番号.
+	SeatNumber string `json:"seatNumber"`
+}
+
+// GetCarNumber returns the value of CarNumber.
+func (s *PatchReservationReqReservationSeatListItem) GetCarNumber() int {
+	return s.CarNumber
+}
+
+// GetSeatNumber returns the value of SeatNumber.
+func (s *PatchReservationReqReservationSeatListItem) GetSeatNumber() string {
+	return s.SeatNumber
+}
+
+// SetCarNumber sets the value of CarNumber.
+func (s *PatchReservationReqReservationSeatListItem) SetCarNumber(val int) {
+	s.CarNumber = val
+}
+
+// SetSeatNumber sets the value of SeatNumber.
+func (s *PatchReservationReqReservationSeatListItem) SetSeatNumber(val string) {
+	s.SeatNumber = val
 }
 
 // 予約状況.
@@ -503,9 +529,8 @@ type ReservationInfo struct {
 	// 乗車駅.
 	BoardingStation OptString `json:"boardingStation"`
 	// 降車駅.
-	GetOffStation OptString `json:"getOffStation"`
-	// 予約席.
-	ReservationSeatList []string `json:"reservationSeatList"`
+	GetOffStation       OptString                                `json:"getOffStation"`
+	ReservationSeatList []ReservationInfoReservationSeatListItem `json:"reservationSeatList"`
 	// 料金.
 	Amount OptInt `json:"amount"`
 	// 予約人数.
@@ -537,7 +562,7 @@ func (s *ReservationInfo) GetGetOffStation() OptString {
 }
 
 // GetReservationSeatList returns the value of ReservationSeatList.
-func (s *ReservationInfo) GetReservationSeatList() []string {
+func (s *ReservationInfo) GetReservationSeatList() []ReservationInfoReservationSeatListItem {
 	return s.ReservationSeatList
 }
 
@@ -582,7 +607,7 @@ func (s *ReservationInfo) SetGetOffStation(val OptString) {
 }
 
 // SetReservationSeatList sets the value of ReservationSeatList.
-func (s *ReservationInfo) SetReservationSeatList(val []string) {
+func (s *ReservationInfo) SetReservationSeatList(val []ReservationInfoReservationSeatListItem) {
 	s.ReservationSeatList = val
 }
 
@@ -604,6 +629,33 @@ func (s *ReservationInfo) SetReservationStatus(val OptReservationInfoReservation
 // SetCustomerInfo sets the value of CustomerInfo.
 func (s *ReservationInfo) SetCustomerInfo(val OptString) {
 	s.CustomerInfo = val
+}
+
+type ReservationInfoReservationSeatListItem struct {
+	// 号車番号.
+	CarNumber int `json:"carNumber"`
+	// 座席番号.
+	SeatNumber string `json:"seatNumber"`
+}
+
+// GetCarNumber returns the value of CarNumber.
+func (s *ReservationInfoReservationSeatListItem) GetCarNumber() int {
+	return s.CarNumber
+}
+
+// GetSeatNumber returns the value of SeatNumber.
+func (s *ReservationInfoReservationSeatListItem) GetSeatNumber() string {
+	return s.SeatNumber
+}
+
+// SetCarNumber sets the value of CarNumber.
+func (s *ReservationInfoReservationSeatListItem) SetCarNumber(val int) {
+	s.CarNumber = val
+}
+
+// SetSeatNumber sets the value of SeatNumber.
+func (s *ReservationInfoReservationSeatListItem) SetSeatNumber(val string) {
+	s.SeatNumber = val
 }
 
 // 予約状況.

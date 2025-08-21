@@ -149,8 +149,17 @@ paths:
                 reservationSeatList:
                   type: array
                   items:
-                    type: string
-                  description: 予約席
+                    type: object
+                    properties:
+                      carNumber:
+                        type: integer
+                        description: 号車番号
+                      seatNumber:
+                        type: string
+                        description: 座席番号
+                    required:
+                      - carNumber
+                      - seatNumber
                 reservationPeople:
                   type: integer
                   description: 予約人数
@@ -202,8 +211,17 @@ components:
         reservationSeatList:
           type: array
           items:
-            type: string
-          description: 予約席
+            type: object
+            properties:
+              carNumber:
+                type: integer
+                description: 号車番号
+              seatNumber:
+                type: string
+                description: 座席番号
+            required:
+              - carNumber
+              - seatNumber
         amount:
           type: integer
           description: 料金
