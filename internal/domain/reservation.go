@@ -17,7 +17,7 @@ type Reservation struct {
 	BoardingStation   string
 	GetOffStation     string
 	Amount            int
-	NumPeople         int
+	ReservationPeople int
 	ReservationStatus CustomerReservationStatus
 	CustomerInfo      string
 }

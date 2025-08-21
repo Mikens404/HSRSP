@@ -121,7 +121,7 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/reservationInfo"
-    patch: 
+    patch:
       operationId: patchReservation
       summary: 予約情報更新
       parameters:
