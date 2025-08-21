@@ -15,27 +15,19 @@ import (
 )
 
 // Encode implements json.Marshaler.
-func (s *GetReservationSeatOK) Encode(e *jx.Encoder) {
+func (s GetReservationSeatOK) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
-// encodeFields encodes fields.
-func (s *GetReservationSeatOK) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("seatNumber")
-		e.Str(s.SeatNumber)
-	}
-	{
-		e.FieldStart("status")
-		e.Bool(s.Status)
-	}
-}
+// encodeFields implements json.Marshaler.
+func (s GetReservationSeatOK) encodeFields(e *jx.Encoder) {
+	for k, elem := range s {
+		e.FieldStart(k)
 
-var jsonFieldsNameOfGetReservationSeatOK = [2]string{
-	0: "seatNumber",
-	1: "status",
+		e.Bool(elem)
+	}
 }
 
 // Decode decodes GetReservationSeatOK from json.
@@ -43,79 +35,30 @@ func (s *GetReservationSeatOK) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode GetReservationSeatOK to nil")
 	}
-	var requiredBitSet [1]uint8
-
+	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "seatNumber":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Str()
-				s.SeatNumber = string(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"seatNumber\"")
+		var elem bool
+		if err := func() error {
+			v, err := d.Bool()
+			elem = bool(v)
+			if err != nil {
+				return err
 			}
-		case "status":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Bool()
-				s.Status = bool(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"status\"")
-			}
-		default:
-			return d.Skip()
+			return nil
+		}(); err != nil {
+			return errors.Wrapf(err, "decode field %q", k)
 		}
+		m[string(k)] = elem
 		return nil
 	}); err != nil {
 		return errors.Wrap(err, "decode GetReservationSeatOK")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000011,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfGetReservationSeatOK) {
-					name = jsonFieldsNameOfGetReservationSeatOK[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *GetReservationSeatOK) MarshalJSON() ([]byte, error) {
+func (s GetReservationSeatOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
@@ -543,7 +486,7 @@ func (s *PostReservationReq) encodeFields(e *jx.Encoder) {
 		e.FieldStart("reservationSeatList")
 		e.ArrStart()
 		for _, elem := range s.ReservationSeatList {
-			e.Str(elem)
+			elem.Encode(e)
 		}
 		e.ArrEnd()
 	}
@@ -614,12 +557,10 @@ func (s *PostReservationReq) Decode(d *jx.Decoder) error {
 		case "reservationSeatList":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
-				s.ReservationSeatList = make([]string, 0)
+				s.ReservationSeatList = make([]PostReservationReqReservationSeatListItem, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem string
-					v, err := d.Str()
-					elem = string(v)
-					if err != nil {
+					var elem PostReservationReqReservationSeatListItem
+					if err := elem.Decode(d); err != nil {
 						return err
 					}
 					s.ReservationSeatList = append(s.ReservationSeatList, elem)
@@ -707,6 +648,119 @@ func (s *PostReservationReq) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *PostReservationReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *PostReservationReqReservationSeatListItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *PostReservationReqReservationSeatListItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("carNumber")
+		e.Int(s.CarNumber)
+	}
+	{
+		e.FieldStart("seatNumber")
+		e.Str(s.SeatNumber)
+	}
+}
+
+var jsonFieldsNameOfPostReservationReqReservationSeatListItem = [2]string{
+	0: "carNumber",
+	1: "seatNumber",
+}
+
+// Decode decodes PostReservationReqReservationSeatListItem from json.
+func (s *PostReservationReqReservationSeatListItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PostReservationReqReservationSeatListItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "carNumber":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.CarNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"carNumber\"")
+			}
+		case "seatNumber":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Str()
+				s.SeatNumber = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"seatNumber\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode PostReservationReqReservationSeatListItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfPostReservationReqReservationSeatListItem) {
+					name = jsonFieldsNameOfPostReservationReqReservationSeatListItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PostReservationReqReservationSeatListItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PostReservationReqReservationSeatListItem) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

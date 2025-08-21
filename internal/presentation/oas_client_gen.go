@@ -39,7 +39,7 @@ type Invoker interface {
 	// 号車ごとの予約状況取得.
 	//
 	// GET /reservationSeat
-	GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (*GetReservationSeatOK, error)
+	GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (GetReservationSeatOK, error)
 	// GetTrainInfo invokes getTrainInfo operation.
 	//
 	// 列車情報の取得.
@@ -198,12 +198,12 @@ func (c *Client) sendGetReservationInfo(ctx context.Context, params GetReservati
 // 号車ごとの予約状況取得.
 //
 // GET /reservationSeat
-func (c *Client) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (*GetReservationSeatOK, error) {
+func (c *Client) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (GetReservationSeatOK, error) {
 	res, err := c.sendGetReservationSeat(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendGetReservationSeat(ctx context.Context, params GetReservationSeatParams) (res *GetReservationSeatOK, err error) {
+func (c *Client) sendGetReservationSeat(ctx context.Context, params GetReservationSeatParams) (res GetReservationSeatOK, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getReservationSeat"),
 		semconv.HTTPRequestMethodKey.String("GET"),

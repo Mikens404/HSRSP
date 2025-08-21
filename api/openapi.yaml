@@ -48,14 +48,11 @@ paths:
               schema:
                 type: object
                 description: 座席番号をキーとした予約状況のマップ
-                properties:
-                  seatNumber:
-                    type: string
-                  status:
-                    type: boolean
-                required:
-                  - seatNumber
-                  - status
+                additionalProperties:
+                  type: boolean
+                example:
+                  "1A": true
+                  "1B": false
   /reservation:
     post:
       operationId: postReservation
@@ -78,7 +75,17 @@ paths:
                 reservationSeatList:
                   type: array
                   items:
-                    type: string
+                    type: object
+                    properties:
+                      carNumber:
+                        type: integer
+                        description: 号車番号
+                      seatNumber:
+                        type: string
+                        description: 座席番号
+                    required:
+                      - carNumber
+                      - seatNumber
                   description: 予約席
                 reservationPeople:
                   type: integer
@@ -109,7 +116,7 @@ paths:
           description: 予約番号
       responses:
         "200":
-          description: 列車情報の取得に成功
+          description: 予約情報の取得に成功
           content:
             "application/json":
               schema:

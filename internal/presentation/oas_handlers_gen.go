@@ -253,7 +253,7 @@ func (s *Server) handleGetReservationSeatRequest(args [0]string, argsEscaped boo
 		return
 	}
 
-	var response *GetReservationSeatOK
+	var response GetReservationSeatOK
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -277,7 +277,7 @@ func (s *Server) handleGetReservationSeatRequest(args [0]string, argsEscaped boo
 		type (
 			Request  = struct{}
 			Params   = GetReservationSeatParams
-			Response = *GetReservationSeatOK
+			Response = GetReservationSeatOK
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

@@ -11,15 +11,15 @@ const (
 
 // 予約情報
 type Reservation struct {
-	ReservationNumber      int
-	ReservationTrainNumber int
-	ReservationSeat        []ReservationSeat
-	BoardingStation        string
-	GetOffStation          string
-	Amount                 int
-	ReservationPeople      int
-	ReservationStatus      CustomerReservationStatus
-	CustomerInfo           string
+	ReservationNumber int
+	TrainNumber       int
+	ReservationSeat   []ReservationSeat
+	BoardingStation   string
+	GetOffStation     string
+	Amount            int
+	NumPeople         int
+	ReservationStatus CustomerReservationStatus
+	CustomerInfo      string
 }
 
 type ReservationSeat struct {

@@ -27,7 +27,7 @@ func (UnimplementedHandler) GetReservationInfo(ctx context.Context, params GetRe
 // 号車ごとの予約状況取得.
 //
 // GET /reservationSeat
-func (UnimplementedHandler) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (r *GetReservationSeatOK, _ error) {
+func (UnimplementedHandler) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (r GetReservationSeatOK, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
