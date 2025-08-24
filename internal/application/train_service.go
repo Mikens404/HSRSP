@@ -11,10 +11,10 @@ type TrainService interface {
 	GetTrainInfo(ctx context.Context, tarinNumber int) (domain.Train, error)
 }
 
-func GetTrainInfo(ctx context.Context, tarinNumber int) (domain.Train, error) {
-	trianInfo, err := infrastructure.FindTrainInfo(ctx, 1)
+func GetTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
+	trainInfo, err := infrastructure.FindTrainInfo(ctx, trainNumber)
 	if err != nil {
 		return domain.Train{}, err
 	}
-	return trianInfo, nil
+	return trainInfo, nil
 }
