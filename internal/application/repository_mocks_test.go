@@ -91,7 +91,7 @@ var _ domain.ReservationRepository = &ReservationRepositoryMock{}
 //
 //		// make and configure a mocked domain.ReservationRepository
 //		mockedReservationRepository := &ReservationRepositoryMock{
-//			CreateReservationFunc: func(ctx context.Context, reservationTrainNumber int, boardingStation string, getOffStation string, reservationSeatList []domain.ReservationSeat, reservationPeople int, customerInfo string) error {
+//			CreateReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
 //				panic("mock out the CreateReservation method")
 //			},
 //			FindReservationFunc: func(ctx context.Context, reservationNumber int) (domain.Reservation, error) {
@@ -100,7 +100,7 @@ var _ domain.ReservationRepository = &ReservationRepositoryMock{}
 //			FindReservationSeatsFunc: func(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
 //				panic("mock out the FindReservationSeats method")
 //			},
-//			UpdateReservationFunc: func(ctx context.Context, reservationTrainNumber int, boardingStation string, getOffStation string, reservationSeatList []domain.ReservationSeat, reservationPeople int, reservationStatus domain.CustomerReservationStatus, customerInfo string) error {
+//			UpdateReservationFunc: func(ctx context.Context, updateReservationParams domain.UpdateReservationParams) error {
 //				panic("mock out the UpdateReservation method")
 //			},
 //		}
@@ -111,7 +111,7 @@ var _ domain.ReservationRepository = &ReservationRepositoryMock{}
 //	}
 type ReservationRepositoryMock struct {
 	// CreateReservationFunc mocks the CreateReservation method.
-	CreateReservationFunc func(ctx context.Context, reservationTrainNumber int, boardingStation string, getOffStation string, reservationSeatList []domain.ReservationSeat, reservationPeople int, customerInfo string) error
+	CreateReservationFunc func(ctx context.Context, createReservationParams domain.CreateReservationParams) error
 
 	// FindReservationFunc mocks the FindReservation method.
 	FindReservationFunc func(ctx context.Context, reservationNumber int) (domain.Reservation, error)
@@ -120,7 +120,7 @@ type ReservationRepositoryMock struct {
 	FindReservationSeatsFunc func(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
 
 	// UpdateReservationFunc mocks the UpdateReservation method.
-	UpdateReservationFunc func(ctx context.Context, reservationTrainNumber int, boardingStation string, getOffStation string, reservationSeatList []domain.ReservationSeat, reservationPeople int, reservationStatus domain.CustomerReservationStatus, customerInfo string) error
+	UpdateReservationFunc func(ctx context.Context, updateReservationParams domain.UpdateReservationParams) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -128,18 +128,8 @@ type ReservationRepositoryMock struct {
 		CreateReservation []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
-			// ReservationTrainNumber is the reservationTrainNumber argument value.
-			ReservationTrainNumber int
-			// BoardingStation is the boardingStation argument value.
-			BoardingStation string
-			// GetOffStation is the getOffStation argument value.
-			GetOffStation string
-			// ReservationSeatList is the reservationSeatList argument value.
-			ReservationSeatList []domain.ReservationSeat
-			// ReservationPeople is the reservationPeople argument value.
-			ReservationPeople int
-			// CustomerInfo is the customerInfo argument value.
-			CustomerInfo string
+			// CreateReservationParams is the createReservationParams argument value.
+			CreateReservationParams domain.CreateReservationParams
 		}
 		// FindReservation holds details about calls to the FindReservation method.
 		FindReservation []struct {
@@ -161,20 +151,8 @@ type ReservationRepositoryMock struct {
 		UpdateReservation []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
-			// ReservationTrainNumber is the reservationTrainNumber argument value.
-			ReservationTrainNumber int
-			// BoardingStation is the boardingStation argument value.
-			BoardingStation string
-			// GetOffStation is the getOffStation argument value.
-			GetOffStation string
-			// ReservationSeatList is the reservationSeatList argument value.
-			ReservationSeatList []domain.ReservationSeat
-			// ReservationPeople is the reservationPeople argument value.
-			ReservationPeople int
-			// ReservationStatus is the reservationStatus argument value.
-			ReservationStatus domain.CustomerReservationStatus
-			// CustomerInfo is the customerInfo argument value.
-			CustomerInfo string
+			// UpdateReservationParams is the updateReservationParams argument value.
+			UpdateReservationParams domain.UpdateReservationParams
 		}
 	}
 	lockCreateReservation    sync.RWMutex
@@ -184,31 +162,21 @@ type ReservationRepositoryMock struct {
 }
 
 // CreateReservation calls CreateReservationFunc.
-func (mock *ReservationRepositoryMock) CreateReservation(ctx context.Context, reservationTrainNumber int, boardingStation string, getOffStation string, reservationSeatList []domain.ReservationSeat, reservationPeople int, customerInfo string) error {
+func (mock *ReservationRepositoryMock) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
 	if mock.CreateReservationFunc == nil {
 		panic("ReservationRepositoryMock.CreateReservationFunc: method is nil but ReservationRepository.CreateReservation was just called")
 	}
 	callInfo := struct {
-		Ctx                    context.Context
-		ReservationTrainNumber int
-		BoardingStation        string
-		GetOffStation          string
-		ReservationSeatList    []domain.ReservationSeat
-		ReservationPeople      int
-		CustomerInfo           string
+		Ctx                     context.Context
+		CreateReservationParams domain.CreateReservationParams
 	}{
-		Ctx:                    ctx,
-		ReservationTrainNumber: reservationTrainNumber,
-		BoardingStation:        boardingStation,
-		GetOffStation:          getOffStation,
-		ReservationSeatList:    reservationSeatList,
-		ReservationPeople:      reservationPeople,
-		CustomerInfo:           customerInfo,
+		Ctx:                     ctx,
+		CreateReservationParams: createReservationParams,
 	}
 	mock.lockCreateReservation.Lock()
 	mock.calls.CreateReservation = append(mock.calls.CreateReservation, callInfo)
 	mock.lockCreateReservation.Unlock()
-	return mock.CreateReservationFunc(ctx, reservationTrainNumber, boardingStation, getOffStation, reservationSeatList, reservationPeople, customerInfo)
+	return mock.CreateReservationFunc(ctx, createReservationParams)
 }
 
 // CreateReservationCalls gets all the calls that were made to CreateReservation.
@@ -216,22 +184,12 @@ func (mock *ReservationRepositoryMock) CreateReservation(ctx context.Context, re
 //
 //	len(mockedReservationRepository.CreateReservationCalls())
 func (mock *ReservationRepositoryMock) CreateReservationCalls() []struct {
-	Ctx                    context.Context
-	ReservationTrainNumber int
-	BoardingStation        string
-	GetOffStation          string
-	ReservationSeatList    []domain.ReservationSeat
-	ReservationPeople      int
-	CustomerInfo           string
+	Ctx                     context.Context
+	CreateReservationParams domain.CreateReservationParams
 } {
 	var calls []struct {
-		Ctx                    context.Context
-		ReservationTrainNumber int
-		BoardingStation        string
-		GetOffStation          string
-		ReservationSeatList    []domain.ReservationSeat
-		ReservationPeople      int
-		CustomerInfo           string
+		Ctx                     context.Context
+		CreateReservationParams domain.CreateReservationParams
 	}
 	mock.lockCreateReservation.RLock()
 	calls = mock.calls.CreateReservation
@@ -316,33 +274,21 @@ func (mock *ReservationRepositoryMock) FindReservationSeatsCalls() []struct {
 }
 
 // UpdateReservation calls UpdateReservationFunc.
-func (mock *ReservationRepositoryMock) UpdateReservation(ctx context.Context, reservationTrainNumber int, boardingStation string, getOffStation string, reservationSeatList []domain.ReservationSeat, reservationPeople int, reservationStatus domain.CustomerReservationStatus, customerInfo string) error {
+func (mock *ReservationRepositoryMock) UpdateReservation(ctx context.Context, updateReservationParams domain.UpdateReservationParams) error {
 	if mock.UpdateReservationFunc == nil {
 		panic("ReservationRepositoryMock.UpdateReservationFunc: method is nil but ReservationRepository.UpdateReservation was just called")
 	}
 	callInfo := struct {
-		Ctx                    context.Context
-		ReservationTrainNumber int
-		BoardingStation        string
-		GetOffStation          string
-		ReservationSeatList    []domain.ReservationSeat
-		ReservationPeople      int
-		ReservationStatus      domain.CustomerReservationStatus
-		CustomerInfo           string
+		Ctx                     context.Context
+		UpdateReservationParams domain.UpdateReservationParams
 	}{
-		Ctx:                    ctx,
-		ReservationTrainNumber: reservationTrainNumber,
-		BoardingStation:        boardingStation,
-		GetOffStation:          getOffStation,
-		ReservationSeatList:    reservationSeatList,
-		ReservationPeople:      reservationPeople,
-		ReservationStatus:      reservationStatus,
-		CustomerInfo:           customerInfo,
+		Ctx:                     ctx,
+		UpdateReservationParams: updateReservationParams,
 	}
 	mock.lockUpdateReservation.Lock()
 	mock.calls.UpdateReservation = append(mock.calls.UpdateReservation, callInfo)
 	mock.lockUpdateReservation.Unlock()
-	return mock.UpdateReservationFunc(ctx, reservationTrainNumber, boardingStation, getOffStation, reservationSeatList, reservationPeople, reservationStatus, customerInfo)
+	return mock.UpdateReservationFunc(ctx, updateReservationParams)
 }
 
 // UpdateReservationCalls gets all the calls that were made to UpdateReservation.
@@ -350,24 +296,12 @@ func (mock *ReservationRepositoryMock) UpdateReservation(ctx context.Context, re
 //
 //	len(mockedReservationRepository.UpdateReservationCalls())
 func (mock *ReservationRepositoryMock) UpdateReservationCalls() []struct {
-	Ctx                    context.Context
-	ReservationTrainNumber int
-	BoardingStation        string
-	GetOffStation          string
-	ReservationSeatList    []domain.ReservationSeat
-	ReservationPeople      int
-	ReservationStatus      domain.CustomerReservationStatus
-	CustomerInfo           string
+	Ctx                     context.Context
+	UpdateReservationParams domain.UpdateReservationParams
 } {
 	var calls []struct {
-		Ctx                    context.Context
-		ReservationTrainNumber int
-		BoardingStation        string
-		GetOffStation          string
-		ReservationSeatList    []domain.ReservationSeat
-		ReservationPeople      int
-		ReservationStatus      domain.CustomerReservationStatus
-		CustomerInfo           string
+		Ctx                     context.Context
+		UpdateReservationParams domain.UpdateReservationParams
 	}
 	mock.lockUpdateReservation.RLock()
 	calls = mock.calls.UpdateReservation

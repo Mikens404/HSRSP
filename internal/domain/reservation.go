@@ -32,3 +32,23 @@ type SeatReservationStatus struct {
 	CarNumber    int             // 何両目
 	Reservations map[string]bool // [席番]
 }
+
+type CreateReservationParams struct {
+	ReservationTrainNumber int
+	BoardingStation        string
+	GetOffStation          string
+	ReservationSeatList    []ReservationSeat
+	ReservationPeople      int
+	CustomerInfo           string
+}
+
+type UpdateReservationParams struct {
+	ReservationNumber      int
+	ReservationTrainNumber int
+	BoardingStation        string
+	GetOffStation          string
+	ReservationSeatList    []ReservationSeat
+	ReservationPeople      int
+	ReservationStatus      CustomerReservationStatus
+	CustomerInfo           string
+}
