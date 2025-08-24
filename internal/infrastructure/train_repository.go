@@ -18,7 +18,7 @@ func NewTrainRepository(domain.TrainRepository,
 	return trainRepositoryImpl{}
 }
 
-func FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
+func (t trainRepositoryImpl) FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
 	if trainNumber != 1 {
 		return domain.Train{}, errors.New("指定された列車は存在しません")
 	}

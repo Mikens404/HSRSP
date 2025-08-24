@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/Mikens404/HSRSP/internal/domain"
-	"github.com/Mikens404/HSRSP/internal/infrastructure"
 )
 
 type TrainService struct {
@@ -24,7 +23,7 @@ func NewTrainService(
 } */
 
 func (t TrainService) GetTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
-	trainInfo, err := infrastructure.FindTrainInfo(ctx, trainNumber)
+	trainInfo, err := t.trainRepository.GetTrainInfo(ctx, trainNumber)
 	if err != nil {
 		return domain.Train{}, err
 	}
