@@ -34,21 +34,21 @@ type SeatReservationStatus struct {
 }
 
 type CreateReservationParams struct {
-	ReservationTrainNumber int
-	BoardingStation        string
-	GetOffStation          string
-	ReservationSeatList    []ReservationSeat
-	ReservationPeople      int
-	CustomerInfo           string
+	TrainNumber       int
+	BoardingStation   string
+	GetOffStation     string
+	ReservationSeats  []ReservationSeat
+	ReservationPeople int
+	CustomerInfo      string
 }
 
 type UpdateReservationParams struct {
-	ReservationNumber      int
-	ReservationTrainNumber int
-	BoardingStation        string
-	GetOffStation          string
-	ReservationSeatList    []ReservationSeat
-	ReservationPeople      int
-	ReservationStatus      CustomerReservationStatus
-	CustomerInfo           string
+	ReservationNumber int
+	TrainNumber       int
+	BoardingStation   string
+	GetOffStation     string
+	ReservationSeats  []ReservationSeat
+	ReservationPeople int
+	ReservationStatus CustomerReservationStatus
+	CustomerInfo      string
 }
