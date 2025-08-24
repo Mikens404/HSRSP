@@ -4,11 +4,15 @@ package presentation
 
 import (
 	"net/http"
+	"net/url"
+
+	"github.com/go-faster/errors"
 
 	"github.com/ogen-go/ogen/conv"
 	"github.com/ogen-go/ogen/middleware"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/uri"
+	"github.com/ogen-go/ogen/validate"
 )
 
 // GetReservationInfoParams is parameters of getReservationInfo operation.
@@ -21,25 +25,33 @@ func unpackGetReservationInfoParams(packed middleware.Parameters) (params GetRes
 	{
 		key := middleware.ParameterKey{
 			Name: "reservationNumber",
-			In:   "query",
+			In:   "path",
 		}
 		params.ReservationNumber = packed[key].(int)
 	}
 	return params
 }
 
-func decodeGetReservationInfoParams(args [0]string, argsEscaped bool, r *http.Request) (params GetReservationInfoParams, _ error) {
-	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode query: reservationNumber.
+func decodeGetReservationInfoParams(args [1]string, argsEscaped bool, r *http.Request) (params GetReservationInfoParams, _ error) {
+	// Decode path: reservationNumber.
 	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "reservationNumber",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
 		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "reservationNumber",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
 
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+			if err := func() error {
 				val, err := d.DecodeValue()
 				if err != nil {
 					return err
@@ -52,17 +64,17 @@ func decodeGetReservationInfoParams(args [0]string, argsEscaped bool, r *http.Re
 
 				params.ReservationNumber = c
 				return nil
-			}); err != nil {
+			}(); err != nil {
 				return err
 			}
 		} else {
-			return err
+			return validate.ErrFieldRequired
 		}
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "reservationNumber",
-			In:   "query",
+			In:   "path",
 			Err:  err,
 		}
 	}
@@ -240,25 +252,33 @@ func unpackPatchReservationParams(packed middleware.Parameters) (params PatchRes
 	{
 		key := middleware.ParameterKey{
 			Name: "reservationNumber",
-			In:   "query",
+			In:   "path",
 		}
 		params.ReservationNumber = packed[key].(int)
 	}
 	return params
 }
 
-func decodePatchReservationParams(args [0]string, argsEscaped bool, r *http.Request) (params PatchReservationParams, _ error) {
-	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode query: reservationNumber.
+func decodePatchReservationParams(args [1]string, argsEscaped bool, r *http.Request) (params PatchReservationParams, _ error) {
+	// Decode path: reservationNumber.
 	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "reservationNumber",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
 		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "reservationNumber",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
 
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+			if err := func() error {
 				val, err := d.DecodeValue()
 				if err != nil {
 					return err
@@ -271,17 +291,17 @@ func decodePatchReservationParams(args [0]string, argsEscaped bool, r *http.Requ
 
 				params.ReservationNumber = c
 				return nil
-			}); err != nil {
+			}(); err != nil {
 				return err
 			}
 		} else {
-			return err
+			return validate.ErrFieldRequired
 		}
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "reservationNumber",
-			In:   "query",
+			In:   "path",
 			Err:  err,
 		}
 	}

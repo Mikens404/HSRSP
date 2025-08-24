@@ -8,6 +8,92 @@ import (
 	"github.com/go-faster/errors"
 )
 
+// Ref: #/components/schemas/errorMessage
+type ErrorMessage struct {
+	// エラーメッセージ.
+	Message string `json:"message"`
+	// エラーステータス.
+	Status ErrorMessageStatus `json:"status"`
+}
+
+// GetMessage returns the value of Message.
+func (s *ErrorMessage) GetMessage() string {
+	return s.Message
+}
+
+// GetStatus returns the value of Status.
+func (s *ErrorMessage) GetStatus() ErrorMessageStatus {
+	return s.Status
+}
+
+// SetMessage sets the value of Message.
+func (s *ErrorMessage) SetMessage(val string) {
+	s.Message = val
+}
+
+// SetStatus sets the value of Status.
+func (s *ErrorMessage) SetStatus(val ErrorMessageStatus) {
+	s.Status = val
+}
+
+func (*ErrorMessage) getTrainInfoRes() {}
+
+// エラーステータス.
+type ErrorMessageStatus string
+
+const (
+	ErrorMessageStatusInvalidParams           ErrorMessageStatus = "invalidParams"
+	ErrorMessageStatusTrainInfoNotFound       ErrorMessageStatus = "trainInfoNotFound"
+	ErrorMessageStatusReservationInfoNotFound ErrorMessageStatus = "reservationInfoNotFound"
+	ErrorMessageStatusUndefined               ErrorMessageStatus = "undefined"
+)
+
+// AllValues returns all ErrorMessageStatus values.
+func (ErrorMessageStatus) AllValues() []ErrorMessageStatus {
+	return []ErrorMessageStatus{
+		ErrorMessageStatusInvalidParams,
+		ErrorMessageStatusTrainInfoNotFound,
+		ErrorMessageStatusReservationInfoNotFound,
+		ErrorMessageStatusUndefined,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s ErrorMessageStatus) MarshalText() ([]byte, error) {
+	switch s {
+	case ErrorMessageStatusInvalidParams:
+		return []byte(s), nil
+	case ErrorMessageStatusTrainInfoNotFound:
+		return []byte(s), nil
+	case ErrorMessageStatusReservationInfoNotFound:
+		return []byte(s), nil
+	case ErrorMessageStatusUndefined:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *ErrorMessageStatus) UnmarshalText(data []byte) error {
+	switch ErrorMessageStatus(data) {
+	case ErrorMessageStatusInvalidParams:
+		*s = ErrorMessageStatusInvalidParams
+		return nil
+	case ErrorMessageStatusTrainInfoNotFound:
+		*s = ErrorMessageStatusTrainInfoNotFound
+		return nil
+	case ErrorMessageStatusReservationInfoNotFound:
+		*s = ErrorMessageStatusReservationInfoNotFound
+		return nil
+	case ErrorMessageStatusUndefined:
+		*s = ErrorMessageStatusUndefined
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // 座席番号をキーとした予約状況のマップ.
 type GetReservationSeatOK map[string]bool
 
@@ -734,6 +820,8 @@ func (s *TrainInfo) SetTrainNumber(val OptInt) {
 func (s *TrainInfo) SetTimeTable(val []TrainInfoTimeTableItem) {
 	s.TimeTable = val
 }
+
+func (*TrainInfo) getTrainInfoRes() {}
 
 type TrainInfoTimeTableItem struct {
 	Station OptString   `json:"station"`

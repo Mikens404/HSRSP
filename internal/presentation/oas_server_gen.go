@@ -12,31 +12,31 @@ type Handler interface {
 	//
 	// 個別の予約情報取得.
 	//
-	// GET /reservation
+	// GET /reservations/{reservationNumber}
 	GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (*ReservationInfo, error)
 	// GetReservationSeat implements getReservationSeat operation.
 	//
 	// 号車ごとの予約状況取得.
 	//
-	// GET /reservationSeat
+	// GET /reservationSeats
 	GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (GetReservationSeatOK, error)
 	// GetTrainInfo implements getTrainInfo operation.
 	//
 	// 列車情報の取得.
 	//
-	// GET /train
-	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
+	// GET /trains
+	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (GetTrainInfoRes, error)
 	// PatchReservation implements patchReservation operation.
 	//
 	// 予約情報更新.
 	//
-	// PATCH /reservation
+	// PATCH /reservations/{reservationNumber}
 	PatchReservation(ctx context.Context, req *PatchReservationReq, params PatchReservationParams) error
 	// PostReservation implements postReservation operation.
 	//
 	// 予約情報の作成.
 	//
-	// POST /reservation
+	// POST /reservations
 	PostReservation(ctx context.Context, req *PostReservationReq) error
 }
 

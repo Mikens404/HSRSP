@@ -34,14 +34,14 @@ func (c *codeRecorder) WriteHeader(status int) {
 //
 // 個別の予約情報取得.
 //
-// GET /reservation
-func (s *Server) handleGetReservationInfoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// GET /reservations/{reservationNumber}
+func (s *Server) handleGetReservationInfoRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getReservationInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/reservation"),
+		semconv.HTTPRouteKey.String("/reservations/{reservationNumber}"),
 	}
 
 	// Start a span for this request.
@@ -126,7 +126,7 @@ func (s *Server) handleGetReservationInfoRequest(args [0]string, argsEscaped boo
 			Params: middleware.Parameters{
 				{
 					Name: "reservationNumber",
-					In:   "query",
+					In:   "path",
 				}: params.ReservationNumber,
 			},
 			Raw: r,
@@ -172,14 +172,14 @@ func (s *Server) handleGetReservationInfoRequest(args [0]string, argsEscaped boo
 //
 // 号車ごとの予約状況取得.
 //
-// GET /reservationSeat
+// GET /reservationSeats
 func (s *Server) handleGetReservationSeatRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getReservationSeat"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/reservationSeat"),
+		semconv.HTTPRouteKey.String("/reservationSeats"),
 	}
 
 	// Start a span for this request.
@@ -314,14 +314,14 @@ func (s *Server) handleGetReservationSeatRequest(args [0]string, argsEscaped boo
 //
 // 列車情報の取得.
 //
-// GET /train
+// GET /trains
 func (s *Server) handleGetTrainInfoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getTrainInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/train"),
+		semconv.HTTPRouteKey.String("/trains"),
 	}
 
 	// Start a span for this request.
@@ -395,7 +395,7 @@ func (s *Server) handleGetTrainInfoRequest(args [0]string, argsEscaped bool, w h
 		return
 	}
 
-	var response *TrainInfo
+	var response GetTrainInfoRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -415,7 +415,7 @@ func (s *Server) handleGetTrainInfoRequest(args [0]string, argsEscaped bool, w h
 		type (
 			Request  = struct{}
 			Params   = GetTrainInfoParams
-			Response = *TrainInfo
+			Response = GetTrainInfoRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -452,14 +452,14 @@ func (s *Server) handleGetTrainInfoRequest(args [0]string, argsEscaped bool, w h
 //
 // 予約情報更新.
 //
-// PATCH /reservation
-func (s *Server) handlePatchReservationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// PATCH /reservations/{reservationNumber}
+func (s *Server) handlePatchReservationRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("patchReservation"),
 		semconv.HTTPRequestMethodKey.String("PATCH"),
-		semconv.HTTPRouteKey.String("/reservation"),
+		semconv.HTTPRouteKey.String("/reservations/{reservationNumber}"),
 	}
 
 	// Start a span for this request.
@@ -559,7 +559,7 @@ func (s *Server) handlePatchReservationRequest(args [0]string, argsEscaped bool,
 			Params: middleware.Parameters{
 				{
 					Name: "reservationNumber",
-					In:   "query",
+					In:   "path",
 				}: params.ReservationNumber,
 			},
 			Raw: r,
@@ -605,14 +605,14 @@ func (s *Server) handlePatchReservationRequest(args [0]string, argsEscaped bool,
 //
 // 予約情報の作成.
 //
-// POST /reservation
+// POST /reservations
 func (s *Server) handlePostReservationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("postReservation"),
 		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/reservation"),
+		semconv.HTTPRouteKey.String("/reservations"),
 	}
 
 	// Start a span for this request.

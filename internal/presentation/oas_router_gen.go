@@ -40,6 +40,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
+	args := [1]string{}
 
 	// Static code generated router with unwrapped path search.
 	switch {
@@ -69,23 +70,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					switch r.Method {
-					case "GET":
-						s.handleGetReservationInfoRequest([0]string{}, elemIsEscaped, w, r)
-					case "PATCH":
-						s.handlePatchReservationRequest([0]string{}, elemIsEscaped, w, r)
-					case "POST":
-						s.handlePostReservationRequest([0]string{}, elemIsEscaped, w, r)
-					default:
-						s.notAllowed(w, r, "GET,PATCH,POST")
-					}
-
-					return
+					break
 				}
 				switch elem[0] {
-				case 'S': // Prefix: "Seat"
+				case 'S': // Prefix: "Seats"
 
-					if l := len("Seat"); len(elem) >= l && elem[0:l] == "Seat" {
+					if l := len("Seats"); len(elem) >= l && elem[0:l] == "Seats" {
 						elem = elem[l:]
 					} else {
 						break
@@ -103,11 +93,67 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 
+				case 's': // Prefix: "s"
+
+					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch r.Method {
+						case "POST":
+							s.handlePostReservationRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+					switch elem[0] {
+					case '/': // Prefix: "/"
+
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "reservationNumber"
+						// Leaf parameter, slashes are prohibited
+						idx := strings.IndexByte(elem, '/')
+						if idx >= 0 {
+							break
+						}
+						args[0] = elem
+						elem = ""
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleGetReservationInfoRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							case "PATCH":
+								s.handlePatchReservationRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET,PATCH")
+							}
+
+							return
+						}
+
+					}
+
 				}
 
-			case 't': // Prefix: "train"
+			case 't': // Prefix: "trains"
 
-				if l := len("train"); len(elem) >= l && elem[0:l] == "train" {
+				if l := len("trains"); len(elem) >= l && elem[0:l] == "trains" {
 					elem = elem[l:]
 				} else {
 					break
@@ -139,7 +185,7 @@ type Route struct {
 	operationID string
 	pathPattern string
 	count       int
-	args        [0]string
+	args        [1]string
 }
 
 // Name returns ogen operation name.
@@ -228,39 +274,12 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				if len(elem) == 0 {
-					switch method {
-					case "GET":
-						r.name = GetReservationInfoOperation
-						r.summary = "個別の予約情報取得"
-						r.operationID = "getReservationInfo"
-						r.pathPattern = "/reservation"
-						r.args = args
-						r.count = 0
-						return r, true
-					case "PATCH":
-						r.name = PatchReservationOperation
-						r.summary = "予約情報更新"
-						r.operationID = "patchReservation"
-						r.pathPattern = "/reservation"
-						r.args = args
-						r.count = 0
-						return r, true
-					case "POST":
-						r.name = PostReservationOperation
-						r.summary = "予約情報の作成"
-						r.operationID = "postReservation"
-						r.pathPattern = "/reservation"
-						r.args = args
-						r.count = 0
-						return r, true
-					default:
-						return
-					}
+					break
 				}
 				switch elem[0] {
-				case 'S': // Prefix: "Seat"
+				case 'S': // Prefix: "Seats"
 
-					if l := len("Seat"); len(elem) >= l && elem[0:l] == "Seat" {
+					if l := len("Seats"); len(elem) >= l && elem[0:l] == "Seats" {
 						elem = elem[l:]
 					} else {
 						break
@@ -273,7 +292,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							r.name = GetReservationSeatOperation
 							r.summary = "号車ごとの予約状況取得"
 							r.operationID = "getReservationSeat"
-							r.pathPattern = "/reservationSeat"
+							r.pathPattern = "/reservationSeats"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -282,11 +301,77 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 					}
 
+				case 's': // Prefix: "s"
+
+					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch method {
+						case "POST":
+							r.name = PostReservationOperation
+							r.summary = "予約情報の作成"
+							r.operationID = "postReservation"
+							r.pathPattern = "/reservations"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+					switch elem[0] {
+					case '/': // Prefix: "/"
+
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "reservationNumber"
+						// Leaf parameter, slashes are prohibited
+						idx := strings.IndexByte(elem, '/')
+						if idx >= 0 {
+							break
+						}
+						args[0] = elem
+						elem = ""
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = GetReservationInfoOperation
+								r.summary = "個別の予約情報取得"
+								r.operationID = "getReservationInfo"
+								r.pathPattern = "/reservations/{reservationNumber}"
+								r.args = args
+								r.count = 1
+								return r, true
+							case "PATCH":
+								r.name = PatchReservationOperation
+								r.summary = "予約情報更新"
+								r.operationID = "patchReservation"
+								r.pathPattern = "/reservations/{reservationNumber}"
+								r.args = args
+								r.count = 1
+								return r, true
+							default:
+								return
+							}
+						}
+
+					}
+
 				}
 
-			case 't': // Prefix: "train"
+			case 't': // Prefix: "trains"
 
-				if l := len("train"); len(elem) >= l && elem[0:l] == "train" {
+				if l := len("trains"); len(elem) >= l && elem[0:l] == "trains" {
 					elem = elem[l:]
 				} else {
 					break
@@ -299,7 +384,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.name = GetTrainInfoOperation
 						r.summary = "列車情報の取得"
 						r.operationID = "getTrainInfo"
-						r.pathPattern = "/train"
+						r.pathPattern = "/trains"
 						r.args = args
 						r.count = 0
 						return r, true

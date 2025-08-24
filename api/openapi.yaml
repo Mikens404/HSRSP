@@ -5,7 +5,7 @@ info:
 
 
 paths:
-  /train:
+  /trains:
     get:
       operationId: getTrainInfo
       summary: 列車情報の取得
@@ -23,7 +23,10 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/trainInfo"
-  /reservationSeat:
+        "404":
+          $ref: "#/components/responses/notFoundError"
+                
+  /reservationSeats:
     get:
       operationId: getReservationSeat
       summary: 号車ごとの予約状況取得
@@ -53,7 +56,7 @@ paths:
                 example:
                   "1A": true
                   "1B": false
-  /reservation:
+  /reservations:
     post:
       operationId: postReservation
       summary: 予約情報の作成
@@ -104,11 +107,12 @@ paths:
       responses:
         "200":
           description: 予約情報の作成に成功
+  /reservations/{reservationNumber}:
     get:
       operationId: getReservationInfo
       summary: 個別の予約情報取得
       parameters:
-        - in: query
+        - in: path
           name: reservationNumber
           schema:
             type: integer
@@ -125,7 +129,7 @@ paths:
       operationId: patchReservation
       summary: 予約情報更新
       parameters:
-        - in: query
+        - in: path
           name: reservationNumber
           schema:
             type: integer
@@ -235,4 +239,27 @@ components:
         customerInfo:
           type: string
           description: 顧客情報
-        
+    errorMessage:
+      type: object
+      properties:
+        message:
+          description: エラーメッセージ
+          type: string
+        status:
+          description: エラーステータス
+          type: string
+          enum:
+            - invalidParams # リクエストパラメータのバリデーションに失敗
+            - trainInfoNotFound # 住民票が存在しない
+            - reservationInfoNotFound # 予約情報が存在しない
+            - undefined # その他のエラー
+      required:
+        - message
+        - status
+  responses:
+    notFoundError:
+      description: 指定されたリソースが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorMessage"

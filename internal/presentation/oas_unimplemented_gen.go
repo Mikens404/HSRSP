@@ -17,7 +17,7 @@ var _ Handler = UnimplementedHandler{}
 //
 // 個別の予約情報取得.
 //
-// GET /reservation
+// GET /reservations/{reservationNumber}
 func (UnimplementedHandler) GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (r *ReservationInfo, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -26,7 +26,7 @@ func (UnimplementedHandler) GetReservationInfo(ctx context.Context, params GetRe
 //
 // 号車ごとの予約状況取得.
 //
-// GET /reservationSeat
+// GET /reservationSeats
 func (UnimplementedHandler) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (r GetReservationSeatOK, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -35,8 +35,8 @@ func (UnimplementedHandler) GetReservationSeat(ctx context.Context, params GetRe
 //
 // 列車情報の取得.
 //
-// GET /train
-func (UnimplementedHandler) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (r *TrainInfo, _ error) {
+// GET /trains
+func (UnimplementedHandler) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (r GetTrainInfoRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -44,7 +44,7 @@ func (UnimplementedHandler) GetTrainInfo(ctx context.Context, params GetTrainInf
 //
 // 予約情報更新.
 //
-// PATCH /reservation
+// PATCH /reservations/{reservationNumber}
 func (UnimplementedHandler) PatchReservation(ctx context.Context, req *PatchReservationReq, params PatchReservationParams) error {
 	return ht.ErrNotImplemented
 }
@@ -53,7 +53,7 @@ func (UnimplementedHandler) PatchReservation(ctx context.Context, req *PatchRese
 //
 // 予約情報の作成.
 //
-// POST /reservation
+// POST /reservations
 func (UnimplementedHandler) PostReservation(ctx context.Context, req *PostReservationReq) error {
 	return ht.ErrNotImplemented
 }

@@ -32,31 +32,31 @@ type Invoker interface {
 	//
 	// 個別の予約情報取得.
 	//
-	// GET /reservation
+	// GET /reservations/{reservationNumber}
 	GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (*ReservationInfo, error)
 	// GetReservationSeat invokes getReservationSeat operation.
 	//
 	// 号車ごとの予約状況取得.
 	//
-	// GET /reservationSeat
+	// GET /reservationSeats
 	GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (GetReservationSeatOK, error)
 	// GetTrainInfo invokes getTrainInfo operation.
 	//
 	// 列車情報の取得.
 	//
-	// GET /train
-	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error)
+	// GET /trains
+	GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (GetTrainInfoRes, error)
 	// PatchReservation invokes patchReservation operation.
 	//
 	// 予約情報更新.
 	//
-	// PATCH /reservation
+	// PATCH /reservations/{reservationNumber}
 	PatchReservation(ctx context.Context, request *PatchReservationReq, params PatchReservationParams) error
 	// PostReservation invokes postReservation operation.
 	//
 	// 予約情報の作成.
 	//
-	// POST /reservation
+	// POST /reservations
 	PostReservation(ctx context.Context, request *PostReservationReq) error
 }
 
@@ -107,7 +107,7 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 //
 // 個別の予約情報取得.
 //
-// GET /reservation
+// GET /reservations/{reservationNumber}
 func (c *Client) GetReservationInfo(ctx context.Context, params GetReservationInfoParams) (*ReservationInfo, error) {
 	res, err := c.sendGetReservationInfo(ctx, params)
 	return res, err
@@ -117,7 +117,7 @@ func (c *Client) sendGetReservationInfo(ctx context.Context, params GetReservati
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getReservationInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/reservation"),
+		semconv.HTTPRouteKey.String("/reservations/{reservationNumber}"),
 	}
 
 	// Run stopwatch.
@@ -149,27 +149,27 @@ func (c *Client) sendGetReservationInfo(ctx context.Context, params GetReservati
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/reservation"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
+	var pathParts [2]string
+	pathParts[0] = "/reservations/"
 	{
 		// Encode "reservationNumber" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "reservationNumber",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "reservationNumber",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
 			return e.EncodeValue(conv.IntToString(params.ReservationNumber))
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
 		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
 	}
-	u.RawQuery = q.Values().Encode()
+	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "GET", u)
@@ -197,7 +197,7 @@ func (c *Client) sendGetReservationInfo(ctx context.Context, params GetReservati
 //
 // 号車ごとの予約状況取得.
 //
-// GET /reservationSeat
+// GET /reservationSeats
 func (c *Client) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (GetReservationSeatOK, error) {
 	res, err := c.sendGetReservationSeat(ctx, params)
 	return res, err
@@ -207,7 +207,7 @@ func (c *Client) sendGetReservationSeat(ctx context.Context, params GetReservati
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getReservationSeat"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/reservationSeat"),
+		semconv.HTTPRouteKey.String("/reservationSeats"),
 	}
 
 	// Run stopwatch.
@@ -240,7 +240,7 @@ func (c *Client) sendGetReservationSeat(ctx context.Context, params GetReservati
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string
-	pathParts[0] = "/reservationSeat"
+	pathParts[0] = "/reservationSeats"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeQueryParams"
@@ -301,17 +301,17 @@ func (c *Client) sendGetReservationSeat(ctx context.Context, params GetReservati
 //
 // 列車情報の取得.
 //
-// GET /train
-func (c *Client) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (*TrainInfo, error) {
+// GET /trains
+func (c *Client) GetTrainInfo(ctx context.Context, params GetTrainInfoParams) (GetTrainInfoRes, error) {
 	res, err := c.sendGetTrainInfo(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams) (res *TrainInfo, err error) {
+func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams) (res GetTrainInfoRes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getTrainInfo"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/train"),
+		semconv.HTTPRouteKey.String("/trains"),
 	}
 
 	// Run stopwatch.
@@ -344,7 +344,7 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string
-	pathParts[0] = "/train"
+	pathParts[0] = "/trains"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeQueryParams"
@@ -391,7 +391,7 @@ func (c *Client) sendGetTrainInfo(ctx context.Context, params GetTrainInfoParams
 //
 // 予約情報更新.
 //
-// PATCH /reservation
+// PATCH /reservations/{reservationNumber}
 func (c *Client) PatchReservation(ctx context.Context, request *PatchReservationReq, params PatchReservationParams) error {
 	_, err := c.sendPatchReservation(ctx, request, params)
 	return err
@@ -401,7 +401,7 @@ func (c *Client) sendPatchReservation(ctx context.Context, request *PatchReserva
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("patchReservation"),
 		semconv.HTTPRequestMethodKey.String("PATCH"),
-		semconv.HTTPRouteKey.String("/reservation"),
+		semconv.HTTPRouteKey.String("/reservations/{reservationNumber}"),
 	}
 
 	// Run stopwatch.
@@ -433,27 +433,27 @@ func (c *Client) sendPatchReservation(ctx context.Context, request *PatchReserva
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/reservation"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
+	var pathParts [2]string
+	pathParts[0] = "/reservations/"
 	{
 		// Encode "reservationNumber" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "reservationNumber",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "reservationNumber",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
 			return e.EncodeValue(conv.IntToString(params.ReservationNumber))
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
 		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
 	}
-	u.RawQuery = q.Values().Encode()
+	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "PATCH", u)
@@ -484,7 +484,7 @@ func (c *Client) sendPatchReservation(ctx context.Context, request *PatchReserva
 //
 // 予約情報の作成.
 //
-// POST /reservation
+// POST /reservations
 func (c *Client) PostReservation(ctx context.Context, request *PostReservationReq) error {
 	_, err := c.sendPostReservation(ctx, request)
 	return err
@@ -494,7 +494,7 @@ func (c *Client) sendPostReservation(ctx context.Context, request *PostReservati
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("postReservation"),
 		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/reservation"),
+		semconv.HTTPRouteKey.String("/reservations"),
 	}
 
 	// Run stopwatch.
@@ -527,7 +527,7 @@ func (c *Client) sendPostReservation(ctx context.Context, request *PostReservati
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string
-	pathParts[0] = "/reservation"
+	pathParts[0] = "/reservations"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
