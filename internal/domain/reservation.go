@@ -13,9 +13,9 @@ const (
 type Reservation struct {
 	ReservationNumber int
 	TrainNumber       int
-	ReservationSeat   []ReservationSeat
 	BoardingStation   string
 	GetOffStation     string
+	ReservationSeat   []ReservationSeat
 	Amount            int
 	ReservationPeople int
 	ReservationStatus CustomerReservationStatus
