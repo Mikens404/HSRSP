@@ -24,15 +24,3 @@ type StopStationList struct {
 	ArrivalTime   time.Time
 	DepartureTime time.Time
 }
-
-/* func TrainForm(
-	trainNumber int,
-	timeTable TimeTable,
-	trainType TrainType,
-) Train {
-	return Train{
-		TrainNumber: trainNumber,
-		TimeTable:   timeTable,
-		TrainType:   trainType,
-	}
-} */
