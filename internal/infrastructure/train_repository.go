@@ -10,11 +10,19 @@ import (
 
 // いつかDB設計する😭
 
-func FindTrainInfo(ctx context.Context, tarinNumber int) (domain.Train, error) {
-	if tarinNumber != 1 {
+type trainRepositoryImpl struct {
+}
+
+func NewTrainRepository(domain.TrainRepository,
+) trainRepositoryImpl {
+	return trainRepositoryImpl{}
+}
+
+func FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
+	if trainNumber != 1 {
 		return domain.Train{}, errors.New("指定された列車は存在しません")
 	}
-	timeTbale := domain.TimeTable{
+	timeTable := domain.TimeTable{
 		domain.StopStationList{
 			StationName:   "さんばか城",
 			ArrivalTime:   time.Date(2019, 03, 22, 16, 00, 00, 00, time.UTC),
@@ -33,8 +41,8 @@ func FindTrainInfo(ctx context.Context, tarinNumber int) (domain.Train, error) {
 	}
 	responseTrainInfo := domain.Train{
 		TrainNumber: 1,
-		TimeTable:   timeTbale,
-		TrainType:   1,
+		TimeTable:   timeTable,
+		TrainType:   domain.Rapid,
 	}
 	return responseTrainInfo, nil
 }

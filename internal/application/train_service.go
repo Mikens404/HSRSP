@@ -7,11 +7,23 @@ import (
 	"github.com/Mikens404/HSRSP/internal/infrastructure"
 )
 
-type TrainService interface {
-	GetTrainInfo(ctx context.Context, tarinNumber int) (domain.Train, error)
+type TrainService struct {
+	trainRepository domain.TrainRepository
 }
 
-func GetTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
+func NewTrainService(
+	trainRepository domain.TrainRepository,
+) TrainService {
+	return TrainService{
+		trainRepository: trainRepository,
+	}
+}
+
+/* type TrainService interface {
+	GetTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error)
+} */
+
+func (t TrainService) GetTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
 	trainInfo, err := infrastructure.FindTrainInfo(ctx, trainNumber)
 	if err != nil {
 		return domain.Train{}, err

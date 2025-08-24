@@ -5,5 +5,5 @@ import (
 )
 
 type TrainRepository interface {
-	GetTrainInfo(ctx context.Context, tarinNumber int) (Train, error)
+	GetTrainInfo(ctx context.Context, trainNumber int) (Train, error)
 }
