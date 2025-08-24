@@ -13,9 +13,9 @@ const (
 type Reservation struct {
 	ReservationNumber int
 	TrainNumber       int
-	ReservationSeat   []ReservationSeat
 	BoardingStation   string
 	GetOffStation     string
+	ReservationSeat   []ReservationSeat
 	Amount            int
 	ReservationPeople int
 	ReservationStatus CustomerReservationStatus
@@ -31,4 +31,24 @@ type ReservationSeat struct {
 type SeatReservationStatus struct {
 	CarNumber    int             // 何両目
 	Reservations map[string]bool // [席番]
+}
+
+type CreateReservationParams struct {
+	TrainNumber       int
+	BoardingStation   string
+	GetOffStation     string
+	ReservationSeats  []ReservationSeat
+	ReservationPeople int
+	CustomerInfo      string
+}
+
+type UpdateReservationParams struct {
+	ReservationNumber int
+	TrainNumber       int
+	BoardingStation   string
+	GetOffStation     string
+	ReservationSeats  []ReservationSeat
+	ReservationPeople int
+	ReservationStatus CustomerReservationStatus
+	CustomerInfo      string
 }
