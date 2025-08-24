@@ -33,13 +33,14 @@ func getMockTrainData() domain.Train {
 		TrainType:   domain.Rapid}
 }
 
-func TestFindTrainInfo(t *testing.T) {
+func Test_trainRepositoryImpl_FindTrainInfo(t *testing.T) {
 	type args struct {
 		ctx         context.Context
 		trainNumber int
 	}
 	tests := []struct {
 		name    string
+		tr      trainRepositoryImpl
 		args    args
 		want    domain.Train
 		wantErr bool
@@ -65,13 +66,14 @@ func TestFindTrainInfo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := FindTrainInfo(tt.args.ctx, tt.args.trainNumber)
+			tr := trainRepositoryImpl{}
+			got, err := tr.FindTrainInfo(tt.args.ctx, tt.args.trainNumber)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("FindTrainInfo() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("trainRepositoryImpl.FindTrainInfo() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FindTrainInfo() = %v, want %v", got, tt.want)
+				t.Errorf("trainRepositoryImpl.FindTrainInfo() = %v, want %v", got, tt.want)
 			}
 		})
 	}
