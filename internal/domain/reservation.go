@@ -9,12 +9,26 @@ const (
 
 )
 
+// 予約情報
 type Reservation struct {
-	reservationNumber     int
-	reservationTrinNumber int
-	reservationSeat       []SeatReservationStatus
-	amount                int
-	reservationPeople     int
-	reservationStatus     CustomerReservationStatus
-	customerInfo          string
+	ReservationNumber int
+	TrainNumber       int
+	ReservationSeat   []ReservationSeat
+	BoardingStation   string
+	GetOffStation     string
+	Amount            int
+	ReservationPeople int
+	ReservationStatus CustomerReservationStatus
+	CustomerInfo      string
+}
+
+type ReservationSeat struct {
+	CarNumber  int    // 何両目
+	SeatNumber string // 席番
+}
+
+// 号車ごとの予約情報
+type SeatReservationStatus struct {
+	CarNumber    int             // 何両目
+	Reservations map[string]bool // [席番]
 }

@@ -1,0 +1,265 @@
+openapi: 3.0.0
+info:
+  title: Helesta Rapid Railway Service Provider
+  version: 0.0.1
+
+
+paths:
+  /trains:
+    get:
+      operationId: getTrainInfo
+      summary: 列車情報の取得
+      parameters:
+        - in: query
+          name: trainNumber
+          schema:
+            type: integer
+          required: true
+          description: 列車番号
+      responses:
+        "200":
+          description: 列車情報の取得に成功
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/trainInfo"
+        "404":
+          $ref: "#/components/responses/notFoundError"
+                
+  /reservationSeats:
+    get:
+      operationId: getReservationSeat
+      summary: 号車ごとの予約状況取得
+      parameters:
+        - in: query
+          name: trainNumber
+          schema:
+            type: integer
+          required: true
+          description: 列車番号
+        - in: query
+          name: carNumber
+          schema:
+            type: integer
+          required: true
+          description: 号車番号
+      responses:
+        "200":
+          description: 予約状況の取得に成功
+          content:
+            "application/json":
+              schema:
+                type: object
+                description: 座席番号をキーとした予約状況のマップ
+                additionalProperties:
+                  type: boolean
+                example:
+                  "1A": true
+                  "1B": false
+  /reservations:
+    post:
+      operationId: postReservation
+      summary: 予約情報の作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservationTrainNumber:
+                  type: integer
+                  description: 予約列車番号
+                boardingStation:
+                  type: string
+                  description: 乗車駅
+                getOffStation:
+                  type: string
+                  description: 降車駅
+                reservationSeatList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      carNumber:
+                        type: integer
+                        description: 号車番号
+                      seatNumber:
+                        type: string
+                        description: 座席番号
+                    required:
+                      - carNumber
+                      - seatNumber
+                  description: 予約席
+                reservationPeople:
+                  type: integer
+                  description: 予約人数
+                customerInfo:
+                  type: string
+                  description: 顧客情報
+              required:
+                - reservationTrainNumber
+                - boardingStation
+                - getOffStation
+                - reservationSeatList
+                - reservationPeople
+                - customerInfo
+        required: true
+      responses:
+        "200":
+          description: 予約情報の作成に成功
+  /reservations/{reservationNumber}:
+    get:
+      operationId: getReservationInfo
+      summary: 個別の予約情報取得
+      parameters:
+        - in: path
+          name: reservationNumber
+          schema:
+            type: integer
+          required: true
+          description: 予約番号
+      responses:
+        "200":
+          description: 予約情報の取得に成功
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/reservationInfo"
+    patch:
+      operationId: patchReservation
+      summary: 予約情報更新
+      parameters:
+        - in: path
+          name: reservationNumber
+          schema:
+            type: integer
+          required: true
+          description: 変更する予約情報番号
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservationTrainNumber:
+                  type: integer
+                  description: 予約列車番号
+                boardingStation:
+                  type: string
+                  description: 乗車駅
+                getOffStation:
+                  type: string
+                  description: 降車駅
+                reservationSeatList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      carNumber:
+                        type: integer
+                        description: 号車番号
+                      seatNumber:
+                        type: string
+                        description: 座席番号
+                    required:
+                      - carNumber
+                      - seatNumber
+                reservationPeople:
+                  type: integer
+                  description: 予約人数
+                reservationStatus:
+                  type: string
+                  description: 予約状況
+                  enum: [RESERVED, PROVISIONAL, CANCELLED] # 予約済,仮予約,キャンセル
+                customerInfo:
+                  type: string
+                  description: 顧客情報
+        required: true
+      responses:
+        "200":
+          description: 予約情報の更新に成功
+components:
+  schemas:
+    trainInfo:
+      type: object
+      properties:
+        trainNumber:
+          type: integer
+          description: 列車番号
+        timeTable:
+          type: array
+          description: 時刻表
+          items:
+            type: object
+            properties:
+              station:
+                type: string
+              time:
+                type: string
+                format: date-time
+    reservationInfo:
+      type: object
+      properties:
+        reservationNumber:
+          type: integer
+          description: 予約番号
+        reservationTrainNumber:
+          type: integer
+          description: 予約列車番号
+        boardingStation:
+          type: string
+          description: 乗車駅
+        getOffStation:
+          type: string
+          description: 降車駅
+        reservationSeatList:
+          type: array
+          items:
+            type: object
+            properties:
+              carNumber:
+                type: integer
+                description: 号車番号
+              seatNumber:
+                type: string
+                description: 座席番号
+            required:
+              - carNumber
+              - seatNumber
+        amount:
+          type: integer
+          description: 料金
+        reservationPeople:
+          type: integer
+          description: 予約人数
+        reservationStatus:
+          type: string
+          description: 予約状況
+          enum: [RESERVED, PROVISIONAL, CANCELLED] # 予約済,仮予約,キャンセル
+        customerInfo:
+          type: string
+          description: 顧客情報
+    errorMessage:
+      type: object
+      properties:
+        message:
+          description: エラーメッセージ
+          type: string
+        status:
+          description: エラーステータス
+          type: string
+          enum:
+            - invalidParams # リクエストパラメータのバリデーションに失敗
+            - trainInfoNotFound # 住民票が存在しない
+            - reservationInfoNotFound # 予約情報が存在しない
+            - undefined # その他のエラー
+      required:
+        - message
+        - status
+  responses:
+    notFoundError:
+      description: 指定されたリソースが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorMessage"
