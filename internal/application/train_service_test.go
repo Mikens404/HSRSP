@@ -11,38 +11,6 @@ import (
 )
 
 func Test_trainService_GetTrainInfo(t *testing.T) {
-	mockTrainRepository := TrainRepositoryMock{
-		FindTrainInfoFunc: func(ctx context.Context, trainNumber int) (domain.Train, error) {
-			timeTable := domain.TimeTable{
-				domain.StopStationList{
-					StationName:   "さんばか城",
-					ArrivalTime:   time.Date(2019, 03, 22, 16, 00, 00, 00, time.UTC),
-					DepartureTime: time.Date(2019, 03, 22, 16, 00, 30, 00, time.UTC),
-				},
-				domain.StopStationList{
-					StationName:   "いぬいキングダム",
-					ArrivalTime:   time.Date(2019, 03, 22, 16, 10, 00, 00, time.UTC),
-					DepartureTime: time.Date(2019, 03, 22, 16, 11, 00, 00, time.UTC),
-				},
-				domain.StopStationList{
-					StationName:   "一期生ハウス",
-					ArrivalTime:   time.Date(2019, 03, 22, 16, 18, 00, 00, time.UTC),
-					DepartureTime: time.Date(2019, 03, 22, 16, 18, 30, 00, time.UTC),
-				},
-			}
-			responseTrainInfo := domain.Train{
-				TrainNumber: 1,
-				TimeTable:   timeTable,
-				TrainType:   domain.Rapid,
-			}
-			return responseTrainInfo, nil
-		},
-	}
-	mockErrorTrainRepository := TrainRepositoryMock{
-		FindTrainInfoFunc: func(ctx context.Context, trainNumber int) (domain.Train, error) {
-			return domain.Train{}, errors.New("")
-		},
-	}
 	type fields struct {
 		trainRepository domain.TrainRepository
 	}
@@ -60,7 +28,33 @@ func Test_trainService_GetTrainInfo(t *testing.T) {
 		{
 			name: "Repositoryからデータが取得出来る",
 			fields: fields{
-				trainRepository: &mockTrainRepository,
+				trainRepository: &TrainRepositoryMock{
+					FindTrainInfoFunc: func(ctx context.Context, trainNumber int) (domain.Train, error) {
+						timeTable := domain.TimeTable{
+							domain.StopStationList{
+								StationName:   "さんばか城",
+								ArrivalTime:   time.Date(2019, 03, 22, 16, 00, 00, 00, time.UTC),
+								DepartureTime: time.Date(2019, 03, 22, 16, 00, 30, 00, time.UTC),
+							},
+							domain.StopStationList{
+								StationName:   "いぬいキングダム",
+								ArrivalTime:   time.Date(2019, 03, 22, 16, 10, 00, 00, time.UTC),
+								DepartureTime: time.Date(2019, 03, 22, 16, 11, 00, 00, time.UTC),
+							},
+							domain.StopStationList{
+								StationName:   "一期生ハウス",
+								ArrivalTime:   time.Date(2019, 03, 22, 16, 18, 00, 00, time.UTC),
+								DepartureTime: time.Date(2019, 03, 22, 16, 18, 30, 00, time.UTC),
+							},
+						}
+						responseTrainInfo := domain.Train{
+							TrainNumber: 1,
+							TimeTable:   timeTable,
+							TrainType:   domain.Rapid,
+						}
+						return responseTrainInfo, nil
+					},
+				},
 			},
 			args: args{
 				ctx:         context.Background(),
@@ -92,7 +86,11 @@ func Test_trainService_GetTrainInfo(t *testing.T) {
 		{
 			name: "Repositoryからエラーが返却されたとき,エラーが返る",
 			fields: fields{
-				trainRepository: &mockErrorTrainRepository,
+				trainRepository: &TrainRepositoryMock{
+					FindTrainInfoFunc: func(ctx context.Context, trainNumber int) (domain.Train, error) {
+						return domain.Train{}, errors.New("")
+					},
+				},
 			},
 			args: args{
 				ctx:         context.Background(),
