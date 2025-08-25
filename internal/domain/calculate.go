@@ -15,6 +15,8 @@ func CalculateFare(distance int) int {
 		responseAmount = 600
 	case distance <= 30:
 		responseAmount = 700
+	default:
+		responseAmount = 700
 	}
 	return responseAmount
 }
