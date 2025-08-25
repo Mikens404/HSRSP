@@ -14,9 +14,23 @@ func TestCalculateFare(t *testing.T) {
 		{
 			name: "適切な料金が返却される,500円",
 			args: args{
+				distance: 7,
+			},
+			want: 500,
+		},
+		{
+			name: "適切な料金が返却される,500円",
+			args: args{
 				distance: 10,
 			},
 			want: 500,
+		},
+		{
+			name: "適切な料金が返却される,600円",
+			args: args{
+				distance: 15,
+			},
+			want: 600,
 		},
 		{
 			name: "適切な料金が返却される,600円",
@@ -26,9 +40,23 @@ func TestCalculateFare(t *testing.T) {
 			want: 600,
 		},
 		{
-			name: "適切な料金が返却される,500円",
+			name: "適切な料金が返却される,700円",
+			args: args{
+				distance: 25,
+			},
+			want: 700,
+		},
+		{
+			name: "適切な料金が返却される,700円",
 			args: args{
 				distance: 30,
+			},
+			want: 700,
+		},
+		{
+			name: "適切な料金が返却される,料金上限700円",
+			args: args{
+				distance: 31,
 			},
 			want: 700,
 		},
@@ -36,6 +64,13 @@ func TestCalculateFare(t *testing.T) {
 			name: "マイナス値が渡されたら0円が返ってくる",
 			args: args{
 				distance: -10,
+			},
+			want: 0,
+		},
+		{
+			name: "0が渡されたら0円が返ってくる",
+			args: args{
+				distance: 0,
 			},
 			want: 0,
 		},
