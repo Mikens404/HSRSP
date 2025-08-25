@@ -12,42 +12,42 @@ func TestCalculateFare(t *testing.T) {
 		want int
 	}{
 		{
-			name: "適切な料金が返却される,500円",
+			name: "適切な料金が返却される,7kmで500円",
 			args: args{
 				distance: 7,
 			},
 			want: 500,
 		},
 		{
-			name: "適切な料金が返却される,500円",
+			name: "適切な料金が返却される,10kmで500円",
 			args: args{
 				distance: 10,
 			},
 			want: 500,
 		},
 		{
-			name: "適切な料金が返却される,600円",
+			name: "適切な料金が返却される,15kmで600円",
 			args: args{
 				distance: 15,
 			},
 			want: 600,
 		},
 		{
-			name: "適切な料金が返却される,600円",
+			name: "適切な料金が返却される,20kmで600円",
 			args: args{
 				distance: 20,
 			},
 			want: 600,
 		},
 		{
-			name: "適切な料金が返却される,700円",
+			name: "適切な料金が返却される,25㎞で700円",
 			args: args{
 				distance: 25,
 			},
 			want: 700,
 		},
 		{
-			name: "適切な料金が返却される,700円",
+			name: "適切な料金が返却される,30kmで700円",
 			args: args{
 				distance: 30,
 			},
