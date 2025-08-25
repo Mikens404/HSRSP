@@ -40,7 +40,7 @@ func TestCalculateFare(t *testing.T) {
 			want: 600,
 		},
 		{
-			name: "適切な料金が返却される,25㎞で700円",
+			name: "適切な料金が返却される,25kmで700円",
 			args: args{
 				distance: 25,
 			},

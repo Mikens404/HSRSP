@@ -1,7 +1,7 @@
 package domain
 
 func CalculateDistance(boardingStation string, getOffStation string) int {
-	// todo　実装
+	// TODO:実装
 	return 1
 }
 
