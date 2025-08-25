@@ -5,13 +5,16 @@ func CalculateDistance(boardingStation string, getOffStation string) int {
 }
 
 func CalculateFare(distance int) int {
+	var responseAmount int
 	switch {
+	case distance <= 0:
+		responseAmount = 0
 	case distance <= 10:
-		return 500
+		responseAmount = 500
 	case distance <= 20:
-		return 600
+		responseAmount = 600
 	case distance <= 30:
-		return 700
+		responseAmount = 700
 	}
-	return 0
+	return responseAmount
 }
