@@ -25,6 +25,10 @@ func NewReservationService(
 	}
 }
 
+func (r *reservationService) CreateReservation() {
+
+}
+
 func (r *reservationService) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
 	return domain.SeatReservationStatus{}, nil
 }

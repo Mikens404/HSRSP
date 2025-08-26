@@ -5,8 +5,9 @@ package application
 
 import (
 	"context"
-	"github.com/Mikens404/HSRSP/internal/domain"
 	"sync"
+
+	"github.com/Mikens404/HSRSP/internal/domain"
 )
 
 // Ensure, that TrainRepositoryMock does implement domain.TrainRepository.
@@ -161,8 +162,8 @@ type ReservationRepositoryMock struct {
 	lockUpdateReservation    sync.RWMutex
 }
 
-// CreateReservation calls CreateReservationFunc.
-func (mock *ReservationRepositoryMock) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+// InsertReservation calls CreateReservationFunc.
+func (mock *ReservationRepositoryMock) InsertReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
 	if mock.CreateReservationFunc == nil {
 		panic("ReservationRepositoryMock.CreateReservationFunc: method is nil but ReservationRepository.CreateReservation was just called")
 	}
