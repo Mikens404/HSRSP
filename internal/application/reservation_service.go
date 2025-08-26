@@ -10,11 +10,21 @@ type ReservationService interface {
 	GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
 }
 
-/*
-	 type reservationServiceImpl struct {
-		reservationRepository domain.ReservationRepository
+type reservationService struct {
+	trainRepository       domain.TrainRepository
+	reservationRepository domain.ReservationRepository
+}
+
+func NewReservationService(
+	trainRepository domain.TrainRepository,
+	reservationRepository domain.ReservationRepository,
+) ReservationService {
+	return &reservationService{
+		trainRepository:       trainRepository,
+		reservationRepository: reservationRepository,
 	}
-*/
-func GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
+}
+
+func (r *reservationService) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
 	return domain.SeatReservationStatus{}, nil
 }
