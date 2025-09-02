@@ -20,7 +20,7 @@ func NewHandler(
 
 // 号車ごとの予約状況
 func (h handler) GetReservationSeat(ctx context.Context, params GetReservationSeatParams) (GetReservationSeatOK, error) {
-	rs, err := application.GetReservationSeat(ctx, params.TrainNumber, params.CarNumber)
+	rs, err := h.reservationService.GetReservationSeat(ctx, params.TrainNumber, params.CarNumber)
 	if err != nil {
 		return nil, err
 	}

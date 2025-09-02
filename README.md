@@ -8,3 +8,4 @@
 
 自動生成コマンド
 go generate ./...
+moq -out ./internal/application/repository_mocks_test.go -pkg application ./internal/domain TrainRepository ReservationRepository

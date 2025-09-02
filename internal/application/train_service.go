@@ -16,6 +16,7 @@ type trainService struct {
 
 func NewTrainService(
 	trainRepository domain.TrainRepository,
+
 ) TrainService {
 	return &trainService{
 		trainRepository: trainRepository,
