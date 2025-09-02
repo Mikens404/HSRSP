@@ -11,16 +11,15 @@ type ReservationService interface {
 }
 
 type reservationService struct {
-	trainRepository       domain.TrainRepository
 	reservationRepository domain.ReservationRepository
 }
 
 func NewReservationService(
-	trainRepository domain.TrainRepository,
+
 	reservationRepository domain.ReservationRepository,
 ) ReservationService {
 	return &reservationService{
-		trainRepository:       trainRepository,
+
 		reservationRepository: reservationRepository,
 	}
 }
