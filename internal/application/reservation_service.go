@@ -25,8 +25,11 @@ func NewReservationService(
 	}
 }
 
-func (r *reservationService) CreateReservation() {
-
+func (r *reservationService) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+	if err := r.reservationRepository.InsertReservation(ctx, createReservationParams); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *reservationService) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
