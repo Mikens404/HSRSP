@@ -27,7 +27,7 @@ func NewReservationService(
 
 func (r *reservationService) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
 	if createReservationParams.ReservationPeople != len(createReservationParams.ReservationSeats) {
-		return errors.New("")
+		return errors.New("予約人数と予約席数が一致しません") // TODO:エラーを作る
 	}
 	if err := r.reservationRepository.InsertReservation(ctx, createReservationParams); err != nil {
 		return err

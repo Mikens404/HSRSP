@@ -58,7 +58,7 @@ func Test_reservationService_CreateReservation(t *testing.T) {
 			fields: fields{
 				reservationRepository: &ReservationRepositoryMock{
 					InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
-						return errors.New("")
+						return errors.New("repository error")
 					},
 				},
 			},
