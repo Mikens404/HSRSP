@@ -8,8 +8,8 @@ import (
 )
 
 type ReservationService interface {
-	GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
 	CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error
+	GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
 }
 
 type reservationService struct {

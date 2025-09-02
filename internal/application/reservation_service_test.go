@@ -87,11 +87,7 @@ func Test_reservationService_CreateReservation(t *testing.T) {
 		{
 			name: "予約人数と予約席数が一致しない場合エラーが返却される",
 			fields: fields{
-				reservationRepository: &ReservationRepositoryMock{
-					InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
-						return nil
-					},
-				},
+				reservationRepository: &ReservationRepositoryMock{},
 			},
 			args: args{
 				ctx: context.Background(),
