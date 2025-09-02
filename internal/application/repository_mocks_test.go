@@ -5,9 +5,8 @@ package application
 
 import (
 	"context"
-	"sync"
-
 	"github.com/Mikens404/HSRSP/internal/domain"
+	"sync"
 )
 
 // Ensure, that TrainRepositoryMock does implement domain.TrainRepository.
@@ -92,14 +91,14 @@ var _ domain.ReservationRepository = &ReservationRepositoryMock{}
 //
 //		// make and configure a mocked domain.ReservationRepository
 //		mockedReservationRepository := &ReservationRepositoryMock{
-//			CreateReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
-//				panic("mock out the CreateReservation method")
-//			},
 //			FindReservationFunc: func(ctx context.Context, reservationNumber int) (domain.Reservation, error) {
 //				panic("mock out the FindReservation method")
 //			},
 //			FindReservationSeatsFunc: func(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
 //				panic("mock out the FindReservationSeats method")
+//			},
+//			InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+//				panic("mock out the InsertReservation method")
 //			},
 //			UpdateReservationFunc: func(ctx context.Context, updateReservationParams domain.UpdateReservationParams) error {
 //				panic("mock out the UpdateReservation method")
@@ -111,27 +110,20 @@ var _ domain.ReservationRepository = &ReservationRepositoryMock{}
 //
 //	}
 type ReservationRepositoryMock struct {
-	// CreateReservationFunc mocks the CreateReservation method.
-	CreateReservationFunc func(ctx context.Context, createReservationParams domain.CreateReservationParams) error
-
 	// FindReservationFunc mocks the FindReservation method.
 	FindReservationFunc func(ctx context.Context, reservationNumber int) (domain.Reservation, error)
 
 	// FindReservationSeatsFunc mocks the FindReservationSeats method.
 	FindReservationSeatsFunc func(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
 
+	// InsertReservationFunc mocks the InsertReservation method.
+	InsertReservationFunc func(ctx context.Context, createReservationParams domain.CreateReservationParams) error
+
 	// UpdateReservationFunc mocks the UpdateReservation method.
 	UpdateReservationFunc func(ctx context.Context, updateReservationParams domain.UpdateReservationParams) error
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// CreateReservation holds details about calls to the CreateReservation method.
-		CreateReservation []struct {
-			// Ctx is the ctx argument value.
-			Ctx context.Context
-			// CreateReservationParams is the createReservationParams argument value.
-			CreateReservationParams domain.CreateReservationParams
-		}
 		// FindReservation holds details about calls to the FindReservation method.
 		FindReservation []struct {
 			// Ctx is the ctx argument value.
@@ -148,6 +140,13 @@ type ReservationRepositoryMock struct {
 			// CarNumber is the carNumber argument value.
 			CarNumber int
 		}
+		// InsertReservation holds details about calls to the InsertReservation method.
+		InsertReservation []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// CreateReservationParams is the createReservationParams argument value.
+			CreateReservationParams domain.CreateReservationParams
+		}
 		// UpdateReservation holds details about calls to the UpdateReservation method.
 		UpdateReservation []struct {
 			// Ctx is the ctx argument value.
@@ -156,46 +155,10 @@ type ReservationRepositoryMock struct {
 			UpdateReservationParams domain.UpdateReservationParams
 		}
 	}
-	lockCreateReservation    sync.RWMutex
 	lockFindReservation      sync.RWMutex
 	lockFindReservationSeats sync.RWMutex
+	lockInsertReservation    sync.RWMutex
 	lockUpdateReservation    sync.RWMutex
-}
-
-// InsertReservation calls CreateReservationFunc.
-func (mock *ReservationRepositoryMock) InsertReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
-	if mock.CreateReservationFunc == nil {
-		panic("ReservationRepositoryMock.CreateReservationFunc: method is nil but ReservationRepository.CreateReservation was just called")
-	}
-	callInfo := struct {
-		Ctx                     context.Context
-		CreateReservationParams domain.CreateReservationParams
-	}{
-		Ctx:                     ctx,
-		CreateReservationParams: createReservationParams,
-	}
-	mock.lockCreateReservation.Lock()
-	mock.calls.CreateReservation = append(mock.calls.CreateReservation, callInfo)
-	mock.lockCreateReservation.Unlock()
-	return mock.CreateReservationFunc(ctx, createReservationParams)
-}
-
-// CreateReservationCalls gets all the calls that were made to CreateReservation.
-// Check the length with:
-//
-//	len(mockedReservationRepository.CreateReservationCalls())
-func (mock *ReservationRepositoryMock) CreateReservationCalls() []struct {
-	Ctx                     context.Context
-	CreateReservationParams domain.CreateReservationParams
-} {
-	var calls []struct {
-		Ctx                     context.Context
-		CreateReservationParams domain.CreateReservationParams
-	}
-	mock.lockCreateReservation.RLock()
-	calls = mock.calls.CreateReservation
-	mock.lockCreateReservation.RUnlock()
-	return calls
 }
 
 // FindReservation calls FindReservationFunc.
@@ -271,6 +234,42 @@ func (mock *ReservationRepositoryMock) FindReservationSeatsCalls() []struct {
 	mock.lockFindReservationSeats.RLock()
 	calls = mock.calls.FindReservationSeats
 	mock.lockFindReservationSeats.RUnlock()
+	return calls
+}
+
+// InsertReservation calls InsertReservationFunc.
+func (mock *ReservationRepositoryMock) InsertReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+	if mock.InsertReservationFunc == nil {
+		panic("ReservationRepositoryMock.InsertReservationFunc: method is nil but ReservationRepository.InsertReservation was just called")
+	}
+	callInfo := struct {
+		Ctx                     context.Context
+		CreateReservationParams domain.CreateReservationParams
+	}{
+		Ctx:                     ctx,
+		CreateReservationParams: createReservationParams,
+	}
+	mock.lockInsertReservation.Lock()
+	mock.calls.InsertReservation = append(mock.calls.InsertReservation, callInfo)
+	mock.lockInsertReservation.Unlock()
+	return mock.InsertReservationFunc(ctx, createReservationParams)
+}
+
+// InsertReservationCalls gets all the calls that were made to InsertReservation.
+// Check the length with:
+//
+//	len(mockedReservationRepository.InsertReservationCalls())
+func (mock *ReservationRepositoryMock) InsertReservationCalls() []struct {
+	Ctx                     context.Context
+	CreateReservationParams domain.CreateReservationParams
+} {
+	var calls []struct {
+		Ctx                     context.Context
+		CreateReservationParams domain.CreateReservationParams
+	}
+	mock.lockInsertReservation.RLock()
+	calls = mock.calls.InsertReservation
+	mock.lockInsertReservation.RUnlock()
 	return calls
 }
 
