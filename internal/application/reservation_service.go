@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Mikens404/HSRSP/internal/domain"
 )
@@ -25,6 +26,9 @@ func NewReservationService(
 }
 
 func (r *reservationService) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+	if createReservationParams.ReservationPeople != len(createReservationParams.ReservationSeats) {
+		return errors.New("")
+	}
 	if err := r.reservationRepository.InsertReservation(ctx, createReservationParams); err != nil {
 		return err
 	}
