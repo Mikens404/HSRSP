@@ -114,7 +114,7 @@ func Test_reservationService_CreateReservation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &reservationService{
+			r := &ReservationService{
 				reservationRepository: tt.fields.reservationRepository,
 			}
 			if err := r.CreateReservation(tt.args.ctx, tt.args.createReservationParams); (err != nil) != tt.wantErr {

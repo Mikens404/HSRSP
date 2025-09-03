@@ -12,8 +12,7 @@ import (
 
 type trainRepositoryImpl struct{}
 
-func NewTrainRepository(domain.TrainRepository,
-) trainRepositoryImpl {
+func NewTrainRepository() trainRepositoryImpl {
 	return trainRepositoryImpl{}
 }
 
