@@ -7,25 +7,24 @@ import (
 	"github.com/Mikens404/HSRSP/internal/domain"
 )
 
-type ReservationService interface {
+/* type ReservationService interface {
 	CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error
 	GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
-}
+} */
 
-type reservationService struct {
+type ReservationService struct {
 	reservationRepository domain.ReservationRepository
 }
 
 func NewReservationService(
 	reservationRepository domain.ReservationRepository,
 ) ReservationService {
-	return &reservationService{
-
+	return ReservationService{
 		reservationRepository: reservationRepository,
 	}
 }
 
-func (r *reservationService) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+func (r ReservationService) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
 	if createReservationParams.ReservationPeople != len(createReservationParams.ReservationSeats) {
 		return errors.New("予約人数と予約席数が一致しません") // TODO:エラーを作る
 	}
@@ -35,6 +34,6 @@ func (r *reservationService) CreateReservation(ctx context.Context, createReserv
 	return nil
 }
 
-func (r *reservationService) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
+func (r ReservationService) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
 	return domain.SeatReservationStatus{}, nil
 }
