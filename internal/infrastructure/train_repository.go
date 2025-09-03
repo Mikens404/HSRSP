@@ -12,12 +12,11 @@ import (
 
 type trainRepositoryImpl struct{}
 
-func NewTrainRepository(domain.TrainRepository,
-) trainRepositoryImpl {
+func NewTrainRepository() trainRepositoryImpl {
 	return trainRepositoryImpl{}
 }
 
-func (t *trainRepositoryImpl) FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
+func (t trainRepositoryImpl) FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
 	if trainNumber != 1 {
 		return domain.Train{}, errors.New("指定された列車は存在しません")
 	}

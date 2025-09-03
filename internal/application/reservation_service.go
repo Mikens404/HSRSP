@@ -20,7 +20,6 @@ func NewReservationService(
 	reservationRepository domain.ReservationRepository,
 ) ReservationService {
 	return &reservationService{
-
 		reservationRepository: reservationRepository,
 	}
 }
