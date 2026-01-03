@@ -12,9 +12,8 @@ import (
 
 type trainRepositoryImpl struct{}
 
-func NewTrainRepository(domain.TrainRepository,
-) trainRepositoryImpl {
-	return trainRepositoryImpl{}
+func NewTrainRepository() domain.TrainRepository {
+	return &trainRepositoryImpl{}
 }
 
 func (t *trainRepositoryImpl) FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
