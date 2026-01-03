@@ -11,19 +11,20 @@ type ReservationService interface {
 	CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error
 	GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
 }
-type reservationService struct {
+
+type reservationServiceImpl struct {
 	reservationRepository domain.ReservationRepository
 }
 
 func NewReservationService(
 	reservationRepository domain.ReservationRepository,
-) ReservationService {
-	return &reservationService{
-		reservationRepository: resservationRepository,
+) reservationServiceImpl {
+	return reservationServiceImpl{
+		reservationRepository: reservationRepository,
 	}
 }
 
-func (r ReservationService) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+func (r reservationServiceImpl) CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
 	if createReservationParams.ReservationPeople != len(createReservationParams.ReservationSeats) {
 		return errors.New("予約人数と予約席数が一致しません") // TODO:エラーを作る
 	}
@@ -33,6 +34,6 @@ func (r ReservationService) CreateReservation(ctx context.Context, createReserva
 	return nil
 }
 
-func (r ReservationService) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
+func (r reservationServiceImpl) GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error) {
 	return domain.SeatReservationStatus{}, nil
 }
