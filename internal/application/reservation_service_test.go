@@ -8,117 +8,106 @@ import (
 	"github.com/Mikens404/HSRSP/internal/domain"
 )
 
-func Test_reservationService_CreateReservation(t *testing.T) {
-	type fields struct {
-		reservationRepository domain.ReservationRepository
-	}
-	type args struct {
-		ctx                     context.Context
-		createReservationParams domain.CreateReservationParams
-	}
+func Test_reservationServiceImpl_CreateReservation(t *testing.T) {
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
+		name string // description of this test case
+		// Named input parameters for receiver constructor.
+		reservationRepository domain.ReservationRepository
+		// Named input parameters for target function.
+		createReservationParams domain.CreateReservationParams
+		wantErr                 bool
 	}{
 		{
 			name: "Repositoryからエラーが返却されない場合,エラーが返らない",
-			fields: fields{
-				reservationRepository: &ReservationRepositoryMock{
-					InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
-						return nil
-					},
+			reservationRepository: &ReservationRepositoryMock{
+				InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+					return nil
 				},
 			},
-			args: args{
-				ctx: context.Background(),
-				createReservationParams: domain.CreateReservationParams{
-					TrainNumber:     1,
-					BoardingStation: "さんばか城",
-					GetOffStation:   "一期生ハウス",
-					ReservationSeats: []domain.ReservationSeat{
-						{
-							CarNumber:  1,
-							SeatNumber: "1A",
-						},
-						{
-							CarNumber:  1,
-							SeatNumber: "1B",
-						},
+			createReservationParams: domain.CreateReservationParams{
+				TrainNumber:     1,
+				BoardingStation: "さんばか城",
+				GetOffStation:   "一期生ハウス",
+				ReservationSeats: []domain.ReservationSeat{
+					{
+						CarNumber:  1,
+						SeatNumber: "1A",
 					},
-					ReservationPeople: 2,
-					CustomerInfo:      "スノーホワイトパラダイス",
+					{
+						CarNumber:  1,
+						SeatNumber: "1B",
+					},
 				},
+				ReservationPeople: 2,
+				CustomerInfo:      "スノーホワイトパラダイス",
 			},
 			wantErr: false,
 		},
 		{
 			name: "Repositoryからエラーが返却された場合,エラーが返る",
-			fields: fields{
-				reservationRepository: &ReservationRepositoryMock{
-					InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
-						return errors.New("repository error")
-					},
+			reservationRepository: &ReservationRepositoryMock{
+				InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+					return errors.New("repository error")
 				},
 			},
-			args: args{
-				ctx: context.Background(),
-				createReservationParams: domain.CreateReservationParams{
-					TrainNumber:     1,
-					BoardingStation: "さんばか城",
-					GetOffStation:   "一期生ハウス",
-					ReservationSeats: []domain.ReservationSeat{
-						{
-							CarNumber:  1,
-							SeatNumber: "1A",
-						},
-						{
-							CarNumber:  1,
-							SeatNumber: "1B",
-						},
+			createReservationParams: domain.CreateReservationParams{
+				TrainNumber:     1,
+				BoardingStation: "さんばか城",
+				GetOffStation:   "一期生ハウス",
+				ReservationSeats: []domain.ReservationSeat{
+					{
+						CarNumber:  1,
+						SeatNumber: "1A",
 					},
-					ReservationPeople: 2,
-					CustomerInfo:      "スノーホワイトパラダイス",
+					{
+						CarNumber:  1,
+						SeatNumber: "1B",
+					},
 				},
+				ReservationPeople: 2,
+				CustomerInfo:      "スノーホワイトパラダイス",
 			},
 			wantErr: true,
 		},
 		{
 			name: "予約人数と予約席数が一致しない場合エラーが返却される",
-			fields: fields{
-				reservationRepository: &ReservationRepositoryMock{},
-			},
-			args: args{
-				ctx: context.Background(),
-				createReservationParams: domain.CreateReservationParams{
-					TrainNumber:     1,
-					BoardingStation: "さんばか城",
-					GetOffStation:   "一期生ハウス",
-					ReservationSeats: []domain.ReservationSeat{
-						{
-							CarNumber:  1,
-							SeatNumber: "1A",
-						},
-						{
-							CarNumber:  1,
-							SeatNumber: "1B",
-						},
-					},
-					ReservationPeople: 1,
-					CustomerInfo:      "スノーホワイトパラダイス",
+			reservationRepository: &ReservationRepositoryMock{
+				InsertReservationFunc: func(ctx context.Context, createReservationParams domain.CreateReservationParams) error {
+					return nil
 				},
+			},
+			createReservationParams: domain.CreateReservationParams{
+				TrainNumber:     1,
+				BoardingStation: "さんばか城",
+				GetOffStation:   "一期生ハウス",
+				ReservationSeats: []domain.ReservationSeat{
+					{
+						CarNumber:  1,
+						SeatNumber: "1A",
+					},
+					{
+						CarNumber:  1,
+						SeatNumber: "1B",
+					},
+				},
+				ReservationPeople: 1,
+				CustomerInfo:      "スノーホワイトパラダイス",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &ReservationService{
-				reservationRepository: tt.fields.reservationRepository,
+			r := NewReservationService(tt.reservationRepository)
+			gotErr := r.CreateReservation(context.Background(), tt.createReservationParams)
+			if gotErr != nil {
+				if !tt.wantErr {
+					t.Errorf("CreateReservation() failed: %v", gotErr)
+				}
+				return
 			}
-			if err := r.CreateReservation(tt.args.ctx, tt.args.createReservationParams); (err != nil) != tt.wantErr {
-				t.Errorf("reservationService.CreateReservation() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				t.Fatal("CreateReservation() succeeded unexpectedly")
 			}
 		})
 	}
