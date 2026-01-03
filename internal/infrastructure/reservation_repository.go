@@ -10,8 +10,8 @@ import (
 
 type reservationRepositoryImpl struct{}
 
-func NewReservationRepository() trainRepositoryImpl {
-	return trainRepositoryImpl{}
+func NewReservationRepository() domain.ReservationRepository {
+	return &reservationRepositoryImpl{}
 }
 
 func (r reservationRepositoryImpl) InsertReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error {

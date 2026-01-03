@@ -7,20 +7,19 @@ import (
 	"github.com/Mikens404/HSRSP/internal/domain"
 )
 
-/* type ReservationService interface {
+type ReservationService interface {
 	CreateReservation(ctx context.Context, createReservationParams domain.CreateReservationParams) error
 	GetReservationSeat(ctx context.Context, trainNumber int, carNumber int) (domain.SeatReservationStatus, error)
-} */
-
-type ReservationService struct {
+}
+type reservationService struct {
 	reservationRepository domain.ReservationRepository
 }
 
 func NewReservationService(
 	reservationRepository domain.ReservationRepository,
 ) ReservationService {
-	return ReservationService{
-		reservationRepository: reservationRepository,
+	return &reservationService{
+		reservationRepository: resservationRepository,
 	}
 }
 
