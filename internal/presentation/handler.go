@@ -8,13 +8,17 @@ import (
 
 type handler struct {
 	reservationService application.ReservationService
+	trainService       application.TrainService
 }
 
 func NewHandler(
 	reservationService application.ReservationService,
+	trainService application.TrainService,
+
 ) handler {
 	return handler{
 		reservationService: reservationService,
+		trainService:       trainService,
 	}
 }
 

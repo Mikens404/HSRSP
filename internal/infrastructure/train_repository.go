@@ -15,7 +15,7 @@ func NewTrainRepository() domain.TrainRepository {
 	return &trainRepositoryImpl{}
 }
 
-func (t *trainRepositoryImpl) FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
+func (t trainRepositoryImpl) FindTrainInfo(ctx context.Context, trainNumber int) (domain.Train, error) {
 	if trainNumber != 1 {
 		return domain.Train{}, domain.ErrTrainNotFound
 	}
